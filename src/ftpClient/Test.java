@@ -1,4 +1,4 @@
-package code;
+package ftpClient;
 
 public class Test {
 
