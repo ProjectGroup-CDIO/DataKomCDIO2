@@ -10,10 +10,14 @@ public class Controller {
 	FTPClient ftp;
 	
 	public void run() {
+		
 		System.out.print("Indtast server IP-adresse: ");
 		String serverIP = keyb.nextLine();
+		
 		System.out.print("\nIndtast server port#: ");
 		int port = Integer.parseInt(keyb.nextLine());
+		System.out.println("");
+		
 		try {
 			ftp = new FTPClient(serverIP, port);
 		} catch (UnknownHostException e) {
