@@ -3,6 +3,7 @@ package weightSim;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Scanner;
@@ -15,6 +16,7 @@ public class ClientInput extends Thread {
 	private String inline;
 	static Scanner keyb = new Scanner(System.in);
 	private Socket sock;
+	private BufferedReader storeText;
 
 	public Socket getSocket() {
 		return sock;
@@ -146,19 +148,11 @@ public class ClientInput extends Thread {
 
 					else if(inline.startsWith("V")){
 						if(inline.equals("V")){
-							System.out.println("Indtast varenummer på den vare, som du vil veje:");
-							System.out.println("23 - Cola");
-							System.out.println("24 - Pepsi");
-							System.out.println("25 - Penis (hvid)");
-							System.out.println("26 - Penis (sort)");
-							System.out.println("27 - Penis (gul)");
-							if(inline.equals(23)){
-								System.out.println("Værsgo at veje din Cola");
-								//Kode der gør, at vejning på varenummer 23 bliver logget til logfilen
-							}
-							else if(inline.equals(24)){
-								System.out.println("Værsgo at veje din Pepsi");
-								//Kode der gør, at vejning på varenummer 24 bliver logget til logfilen
+							System.out.println("Indtast varenummer pÔøΩ den vare, som du vil veje:");
+							storeText = new BufferedReader(new FileReader("Store.txt"));
+							String line = storeText.readLine();
+							while (line != null) {
+								System.out.println(line);
 							}
 						}
 					}
