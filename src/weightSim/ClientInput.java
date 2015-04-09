@@ -144,6 +144,25 @@ public class ClientInput extends Thread {
 						}						
 					}
 
+					else if(inline.startsWith("V")){
+						if(inline.equals("V")){
+							System.out.println("Indtast varenummer på den vare, som du vil veje:");
+							System.out.println("23 - Cola");
+							System.out.println("24 - Pepsi");
+							System.out.println("25 - Penis (hvid)");
+							System.out.println("26 - Penis (sort)");
+							System.out.println("27 - Penis (gul)");
+							if(inline.equals(23)){
+								System.out.println("Værsgo at veje din Cola");
+								//Kode der gør, at vejning på varenummer 23 bliver logget til logfilen
+							}
+							else if(inline.equals(24)){
+								System.out.println("Værsgo at veje din Pepsi");
+								//Kode der gør, at vejning på varenummer 24 bliver logget til logfilen
+							}
+						}
+					}
+
 					else if (inline.startsWith("T")){
 						if (inline.equals("T")){
 							Simulator.setTara(Simulator.getBrutto());

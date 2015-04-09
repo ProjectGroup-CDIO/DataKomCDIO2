@@ -104,6 +104,7 @@ public class Simulator {
 		System.out.println("D, RM20 8, S, T, B, Q                                ");
 		System.out.println("paa kommunikationsporten.                        ");
 		System.out.println("******");
+		System.out.println("Tast V for ny vejning");
 		System.out.println("Tast T for tara (svarende til knaptryk på vægt)");
 		System.out.println("Tast B for ny brutto (svarende til at belastningen på vægt ændres)");
 		System.out.println("Tast Q for at afslutte program program");
