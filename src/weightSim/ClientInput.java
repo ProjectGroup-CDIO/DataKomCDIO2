@@ -3,6 +3,7 @@ package weightSim;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Scanner;
@@ -15,6 +16,7 @@ public class ClientInput extends Thread {
 	private String inline;
 	static Scanner keyb = new Scanner(System.in);
 	private Socket sock;
+	private BufferedReader storeText;
 
 	public Socket getSocket() {
 		return sock;
@@ -142,6 +144,17 @@ public class ClientInput extends Thread {
 							}
 
 						}						
+					}
+
+					else if(inline.startsWith("V")){
+						if(inline.equals("V")){
+							System.out.println("Indtast varenummer p� den vare, som du vil veje:");
+							storeText = new BufferedReader(new FileReader("Store.txt"));
+							String line = storeText.readLine();
+							while (line != null) {
+								System.out.println(line);
+							}
+						}
 					}
 
 					else if (inline.startsWith("T")){
