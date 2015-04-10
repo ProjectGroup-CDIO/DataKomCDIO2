@@ -3,6 +3,7 @@ package weightSim;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -71,13 +72,25 @@ public class ClientInput extends Thread {
 
 		Simulator.printmenu();
 
-		while(true) {
-			try {
-				Thread.sleep(35);
-			} catch (InterruptedException e2) {
-				//doesn't really matter if interrupted
+
+		try {
+
+
+			inline = instream.readLine().toUpperCase();
+			if((inline.matches("[0-9]+"))){
+				productVerification(inline);
+			}else{
+				System.out.println("Wrong input!");
 			}
+
+		} catch (Exception e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+
+		while(true) {
 			try{
+
 				while (!(inline = instream.readLine().toUpperCase()).isEmpty()){
 					boolean correctmsg = false;
 					//When we get a message with RM20 8 we will reply with a message from the server.
@@ -144,17 +157,6 @@ public class ClientInput extends Thread {
 							}
 
 						}						
-					}
-
-					else if(inline.startsWith("V")){
-						if(inline.equals("V")){
-							System.out.println("Indtast varenummer p� den vare, som du vil veje:");
-							storeText = new BufferedReader(new FileReader("Store.txt"));
-							String line = storeText.readLine();
-							while (line != null) {
-								System.out.println(line);
-							}
-						}
 					}
 
 					else if (inline.startsWith("T")){
@@ -228,6 +230,46 @@ public class ClientInput extends Thread {
 				//e.printStackTrace();
 			}
 		}
+	}
+
+	private int productVerification(String inline) {
+		try {
+			storeText = new BufferedReader(new FileReader("Store.txt"));
+			int nrOfProducts = 0;
+
+			String line = storeText.readLine();
+
+			while (line != null) {
+				outstream.writeBytes(line +"\n\r");
+				line = storeText.readLine();
+				nrOfProducts++;
+			}
+			BufferedReader storeText1 = new BufferedReader(new FileReader("Store.txt"));
+			outstream.writeBytes("Please write the nr of product you wish to work with" +"\n\r");
+			if(nrOfProducts >= Integer.parseInt(inline)){
+				for(int i = 0; i <= Integer.parseInt(inline); i++){
+					line = storeText1.readLine();
+				}
+			System.out.println();
+			System.out.println(line);
+			System.out.println("*****************AAAAAAAAAAAAAA***********************");
+			//String ProduktNr
+//produkt nr
+// produkt name
+//produkt total weight
+				
+
+			}else{
+				return 0;
+			}
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return 0;
+
+
 	}
 }
 
