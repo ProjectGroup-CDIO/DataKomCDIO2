@@ -72,13 +72,24 @@ public class ClientInput extends Thread {
 
 		Simulator.printmenu();
 
-
 		try {
+			
+
+			storeText = new BufferedReader(new FileReader("Store.txt"));
 
 
+			String line = storeText.readLine();
+			
+			int nrOfProducts = 0;
+			while (line != null) {
+				outstream.writeBytes(line +"\n\r");
+				line = storeText.readLine();
+				nrOfProducts++;
+			}
+			outstream.writeBytes("Please write a produkt ID - its a nr.");
 			inline = instream.readLine().toUpperCase();
 			if((inline.matches("[0-9]+"))){
-				productVerification(inline);
+				productVerification(inline, nrOfProducts);
 			}else{
 				System.out.println("Wrong input!");
 			}
@@ -232,31 +243,18 @@ public class ClientInput extends Thread {
 		}
 	}
 
-	private int productVerification(String inline) {
+	private int productVerification(String inline,int nrOfProducts) {
 		try {
 			storeText = new BufferedReader(new FileReader("Store.txt"));
-			int nrOfProducts = 0;
-
-			String line = storeText.readLine();
-
-			while (line != null) {
-				outstream.writeBytes(line +"\n\r");
-				line = storeText.readLine();
-				nrOfProducts++;
-			}
-			BufferedReader storeText1 = new BufferedReader(new FileReader("Store.txt"));
-			outstream.writeBytes("Please write the nr of product you wish to work with" +"\n\r");
+			String line = "";
+			
 			if(nrOfProducts >= Integer.parseInt(inline)){
-				for(int i = 0; i <= Integer.parseInt(inline); i++){
-					line = storeText1.readLine();
+				for(int i = 1; i <= Integer.parseInt(inline); i++){
+					line = storeText.readLine();
 				}
-			System.out.println();
-			System.out.println(line);
-			System.out.println("*****************AAAAAAAAAAAAAA***********************");
-			//String ProduktNr
-//produkt nr
-// produkt name
-//produkt total weight
+				outstream.writeBytes("You have choosen:");
+				outstream.writeBytes(line);
+
 				
 
 			}else{
