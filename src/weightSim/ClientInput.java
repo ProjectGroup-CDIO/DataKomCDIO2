@@ -123,7 +123,7 @@ public class ClientInput extends Thread {
 						correctmsg = true; 
 					}
 
-					else if (inline.startsWith("D")){
+					else if (inline.startsWith("D")){						
 						if (inline.equals("D")){
 							Simulator.setWeightDisplay("");
 							Simulator.printmenu();
