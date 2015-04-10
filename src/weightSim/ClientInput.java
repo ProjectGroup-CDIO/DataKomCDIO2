@@ -255,7 +255,18 @@ public class ClientInput extends Thread {
 				outstream.writeBytes("You have choosen:");
 				outstream.writeBytes(line);
 
+				outstream.writeBytes("  "+line.indexOf(",") + "\n\r");
+				outstream.writeBytes("  "+(line.substring(line.indexOf(",")+1, line.length()).indexOf(",")+line.indexOf(",")+1) + "\n\r");
 				
+				
+//				for(){
+//					
+//				}
+				//String ProduktNr
+				//produkt nr
+				// produkt name
+				//produkt total weight
+
 
 			}else{
 				return 0;
