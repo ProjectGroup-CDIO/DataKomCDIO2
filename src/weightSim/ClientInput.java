@@ -17,7 +17,7 @@ public class ClientInput extends Thread {
 	private String inline;
 	static Scanner keyb = new Scanner(System.in);
 	private Socket sock;
-	private BufferedReader storeText;
+	
 
 	public Socket getSocket() {
 		return sock;
@@ -72,32 +72,7 @@ public class ClientInput extends Thread {
 
 		Simulator.printmenu();
 
-		try {
-			
-
-			storeText = new BufferedReader(new FileReader("Store.txt"));
-
-
-			String line = storeText.readLine();
-			
-			int nrOfProducts = 0;
-			while (line != null) {
-				outstream.writeBytes(line +"\n\r");
-				line = storeText.readLine();
-				nrOfProducts++;
-			}
-			outstream.writeBytes("Please write a produkt ID - its a nr.");
-			inline = instream.readLine().toUpperCase();
-			if((inline.matches("[0-9]+"))){
-				productVerification(inline, nrOfProducts);
-			}else{
-				System.out.println("Wrong input!");
-			}
-
-		} catch (Exception e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		}
+	
 
 		while(true) {
 			try{
@@ -243,43 +218,7 @@ public class ClientInput extends Thread {
 		}
 	}
 
-	private int productVerification(String inline,int nrOfProducts) {
-		try {
-			storeText = new BufferedReader(new FileReader("Store.txt"));
-			String line = "";
-			
-			if(nrOfProducts >= Integer.parseInt(inline)){
-				for(int i = 1; i <= Integer.parseInt(inline); i++){
-					line = storeText.readLine();
-				}
-				outstream.writeBytes("You have choosen:");
-				outstream.writeBytes(line);
 
-				outstream.writeBytes("  "+line.indexOf(",") + "\n\r");
-				outstream.writeBytes("  "+(line.substring(line.indexOf(",")+1, line.length()).indexOf(",")+line.indexOf(",")+1) + "\n\r");
-				
-				
-//				for(){
-//					
-//				}
-				//String ProduktNr
-				//produkt nr
-				// produkt name
-				//produkt total weight
-
-
-			}else{
-				return 0;
-			}
-
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return 0;
-
-
-	}
 }
 
 
