@@ -1,5 +1,7 @@
 package weightClient;
 
+import ftpClient.FTPClient;
+
 import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -17,11 +19,19 @@ public class WeightClient {
 	private static BufferedReader read;
 	private static PrintWriter write;
 
-	public static void main(String[] args) {
-		printMenu();
-		run();
+	public static void main(String[] args) throws UnknownHostException, IOException {
 		
-
+		
+		//printMenu();
+		//run();
+		FTPClient FTPCOne = new FTPClient("10.16.173.70", 21);
+		
+		FTPCOne.makeRequest();
+		FTPCOne.sendRequest();
+		FTPCOne.getResponse();
+		
+		
+		
 		while(active){
 			
 			
