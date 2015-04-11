@@ -1,8 +1,12 @@
 package weightClient;
 
 import ftpClient.FTPClient;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.BindException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
@@ -25,6 +29,9 @@ public class WeightClient {
 		//printMenu();
 		//run();
 		FTPClient FTPCOne = new FTPClient("10.16.173.70", 21);
+		FTPCOne.getResponse();
+		FTPCOne.printResponse();
+		
 		
 		FTPCOne.makeRequest();
 		FTPCOne.sendRequest();
@@ -83,9 +90,11 @@ public class WeightClient {
 					}				
 				} catch (UnknownHostException e) {
 					System.err.println("Error001: "+e.getMessage());
+				} catch (BindException e) {
+					System.err.println("Error008: "+e.getMessage());
 				} catch (IOException e) {
 					System.err.println("Error002: "+e.getMessage());
-				}				
+				}
 			}
 			scanner.close();
 		} else System.out.println("Unable to establish connection");
