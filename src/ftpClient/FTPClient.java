@@ -18,15 +18,15 @@ import java.util.Scanner;
  *
  */
 
-public class FTPClient {
-	
-	Socket socket;
-	BufferedReader in; 
-	DataOutputStream out;
-	Scanner keyb = new Scanner(System.in);
+public class FTPClient extends Thread {
+
+	private Socket socket;
+	private BufferedReader in; 
+	private DataOutputStream out;
+	private Scanner keyb = new Scanner(System.in);
+	private String request;
+	private String response;
 	private BufferedReader storeText;
-	String request;
-	String response;
 	
 	
 	public FTPClient(String serverIP, int port) throws IOException, UnknownHostException {
@@ -39,14 +39,11 @@ public class FTPClient {
 		request = keyb.nextLine(); 
 	}
 	
-	public void sendRequest() {
-		try {
-			byte[] sendReq = new byte[request.length()];
-			sendReq = request.getBytes(); 
-			out.write(sendReq, 0, sendReq.length);
-		} catch (IOException e) {
-			System.out.println("Error003: "+e.getMessage()+". Error in sendReq.");
-		}
+	public void sendRequest() throws IOException {
+//			byte[] sendReq = new byte[request.length()];
+//			sendReq = request.getBytes(); 
+//			out.write(sendReq, 0, sendReq.length);
+			out.writeBytes(request);
 	}
 	
 	public void getResponse() throws IOException {
@@ -54,12 +51,14 @@ public class FTPClient {
 	}
 	
 	public void useResponse() {
-		
 	}
 	
 	public void printMenu() {
 		System.out.println("Tast 1 for at overføre en fil til ZYBO board");
-		System.out.println("Tast 2 for at sende en kommando til ZYBO board");
+		System.out.println("Tast 2 for at sende en kommando til ZYBO board");		
+	}
+	
+	public void run() {
 		
 	}
 	

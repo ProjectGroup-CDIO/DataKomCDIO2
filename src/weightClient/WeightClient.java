@@ -6,10 +6,10 @@ import java.net.UnknownHostException;
 import java.util.Scanner;
 
 
-public class Kommu {
+public class WeightClient {
 
 //	@SuppressWarnings("deprecation")
-	public void kommu() {
+	public void run() {
 		
 		DataOutputStream outputStream = null;
 		InputStreamReader inputstream = null;
