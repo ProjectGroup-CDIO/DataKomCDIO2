@@ -43,11 +43,12 @@ public class FTPClient extends Thread {
 
 	public void makeRequest() {
 		String input = keyb.nextLine();
-		if(input.toLowerCase().equals("ls") || input.toLowerCase().equals("list")) {
-			request = "list";
-		}else if(input.toLowerCase().equals("get") || input.toLowerCase().equals("retr")) {
-			request = "retr";
-		}else request = input;
+//		if(input.toLowerCase().equals("ls") || input.toLowerCase().equals("list")) {
+//			request = "list";
+//		}else if(input.toLowerCase().equals("get") || input.toLowerCase().equals("retr")) {
+//			request = "retr";
+//		}else
+			request = input;
 	}
 
 	public void sendRequest() throws IOException {
@@ -57,6 +58,7 @@ public class FTPClient extends Thread {
 		//		out.writeBytes(request);
 		
 		System.out.println(request);
+		out.writeBytes(request + "\r\n");
 		
 	}
 
@@ -89,6 +91,14 @@ public class FTPClient extends Thread {
 	public void writeFile(File file) throws FileNotFoundException {
 		fileOut = new FileOutputStream(file);
 	}
+	
+	public void Login() throws IOException {
+		out.writeBytes("user helmut" + "\r\n");
+	//	Thread.sleep(100);
+		out.writeBytes("pass 123" + "\r\n");
+
+	}
+
 
 	public void run() {
 		FTPClient ftp;
@@ -142,10 +152,6 @@ public class FTPClient extends Thread {
 		}
 	}
 
-	public void Login() {
-		// TODO Auto-generated method stub
-
-	}
 
 
 
