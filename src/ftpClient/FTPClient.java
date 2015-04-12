@@ -159,20 +159,14 @@ public class FTPClient extends Thread {
 	//				for(int i = 1; i <= Integer.parseInt(inline); i++){
 	//					line = storeText.readLine();
 	//				}
-	//				outstream.writeBytes("You have choosen:");
-	//				outstream.writeBytes(line);
 	//
-	//				outstream.writeBytes("  "+line.indexOf(",") + "\n\r");
-	//				outstream.writeBytes("  "+(line.substring(line.indexOf(",")+1, line.length()).indexOf(",")+line.indexOf(",")+1) + "\n\r");
-	//				
-	//				
-	////				for(){
-	////					
-	////				}
-	//				//String ProduktNr
-	//				//produkt nr
-	//				// produkt name
-	//				//produkt total weight
+	//				String[] vare = line.split(",");
+	//				outstream.writeBytes("You have choosen:");
+	//				outstream.writeBytes("From - VareID: "+vare[0]+", Vare: "+vare[1]+", VareWeight: "+vare[2]);
+	//
+	//				String produktNr = vare[0];
+	//				String produktName = vare[1];
+	//				String produktWeight = vare[2];
 	//
 	//
 	//			}else{
