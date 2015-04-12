@@ -22,14 +22,34 @@ public class WeightClient {
 	private static BufferedReader read;
 	private static PrintWriter write;
 
+	String PA;
+	String MV;
+	String TL;
+	String peas;
+	String mavi;
+	String thli;
+	
+	private String[] logins = new String[6];
+
+	void fillLogins(){
+
+		logins[0] = PA;
+		logins[1] = peas;
+		logins[2] = MV;
+		logins[3] = mavi;
+		logins[4] = TL;
+		logins[5] = thli;
+
+	}
+
 	public static void main(String[] args) {
 		printMenu();
 		run();
-		
+
 
 		while(active){
-			
-			
+
+
 
 		}
 
@@ -87,8 +107,8 @@ public class WeightClient {
 			scanner.close();
 		} else System.out.println("Unable to establish connection");
 	}
-	
-	
+
+
 	public static void printMenu() {
 		System.out.println("Write RM20 8 \"<message>\" \"<message>\" \"<message>\"  to send a mesage to the scale and wait for a reply");
 		System.out.println("Write P111 \"<message>\" to send a message to the instruktion display(max 30 chars)");
