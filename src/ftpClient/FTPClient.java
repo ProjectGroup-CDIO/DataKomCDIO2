@@ -10,7 +10,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.BindException;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -27,7 +26,6 @@ public class FTPClient extends Thread {
 	private Socket socket;
 	public static BufferedReader in; 
 	private DataOutputStream out;
-	private PrintWriter writeOut;
 	private FileOutputStream fileOut;
 	private Scanner keyb = new Scanner(System.in);
 	private String request;
@@ -55,10 +53,8 @@ public class FTPClient extends Thread {
 		//			sendReq = request.getBytes(); 
 		//			out.write(sendReq, 0, sendReq.length);
 		//		out.writeBytes(request);
-		writeOut.print(request);	
 		System.out.println(request);
 		out.writeBytes(request + "\r\n");
-		writeOut.println(request);
 	}
 
 	public void getResponse() throws IOException {
