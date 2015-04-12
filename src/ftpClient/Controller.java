@@ -19,7 +19,7 @@ public class Controller {
 		System.out.println("");
 		
 		try {
-			ftp = new FTPClient(serverIP, port);
+			ftp = new FTPClient(serverIP);
 		} catch (UnknownHostException e) {
 			System.out.println("Error004: "+e.getMessage());
 			e.printStackTrace();

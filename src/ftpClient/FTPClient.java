@@ -3,7 +3,10 @@
  */
 package ftpClient;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,6 +16,9 @@ import java.io.InputStreamReader;
 import java.net.BindException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Scanner;
 
 
@@ -23,20 +29,25 @@ import java.util.Scanner;
 
 public class FTPClient extends Thread {
 
-	private Socket socket;
-	public static BufferedReader in; 
+	private Socket socket; 
+	private static BufferedReader in; 
 	private DataOutputStream out;
+	private DataInputStream fileIn;
 	private FileOutputStream fileOut;
 	private Scanner keyb = new Scanner(System.in);
 	private String request;
 	private String response;
 	private ServerListener ear = new ServerListener();
 
-	public FTPClient(String serverIP, int port) throws IOException, UnknownHostException {
-		socket = new Socket(serverIP, port);
+	public FTPClient(String serverIP) throws IOException, UnknownHostException {
+		socket = new Socket(serverIP, 21);
+		//		datasocket = new Socket(serverIP, 20);
 		in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		out = new DataOutputStream(socket.getOutputStream());
-		 
+	}
+
+	public static BufferedReader getIn() {
+		return in;
 	}
 
 	public void makeRequest() {
@@ -55,7 +66,7 @@ public class FTPClient extends Thread {
 		//		out.writeBytes(request);
 		System.out.println(request);
 		out.writeBytes(request + "\r\n");
-		
+
 	}
 
 	public void getResponse() throws IOException {
@@ -74,8 +85,8 @@ public class FTPClient extends Thread {
 		System.out.println(response);
 	}
 
-	public void useResponse() {
-
+	public void useResponse() throws IOException {
+		fileIn = new DataInputStream(socket.getInputStream());
 	}
 
 	public void printMenu() {
@@ -83,8 +94,37 @@ public class FTPClient extends Thread {
 		System.out.println("Tast 2 for at sende en kommando til ZYBO board");		
 	}
 
-	public void writeFile(File file) throws FileNotFoundException {
-		fileOut = new FileOutputStream(file);
+	public void writeFile() throws UnknownHostException, IOException {
+		
+	    DataInputStream in = null;
+	    
+	    in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+	    
+	    System.out.print("Indtast sti til fil der skal overføres: ");
+		String filePath = keyb.nextLine();
+		System.out.println();
+		File file = new File(filePath); 
+		Path path = Paths.get(filePath);
+		
+	    // Get the size of the file
+	    long length = file.length();
+	    
+	    if (length > Integer.MAX_VALUE) {
+	        System.out.println("File is too large.");
+	    }
+	    
+	    byte[] bytes = new byte[(int) length];    
+	    bytes = Files.readAllBytes(path); 
+	    System.out.println(bytes);
+	    out.writeBytes("put ");
+	    out.write(bytes);
+	    out.writeBytes("\r\n");
+	    
+	    out.flush();
+	    out.close();
+	    in.close();
+	    
+
 	}
 
 	public void run() {
@@ -96,7 +136,7 @@ public class FTPClient extends Thread {
 			System.out.println();
 			try {
 				int port = Integer.parseInt(keyb.nextLine());
-				ftp = new FTPClient(IP, port);
+				ftp = new FTPClient(IP);
 				break;
 			} catch (UnknownHostException e) {
 				System.out.println("Error006: "+e.getMessage());
@@ -125,10 +165,17 @@ public class FTPClient extends Thread {
 						break;
 					} else {
 						try {
-							ftp.writeFile(new File(file));	
+							ftp.writeFile();	
 							break;
 						} catch (FileNotFoundException e) {
 							System.out.println("Error010: "+e.getMessage());
+							e.printStackTrace();
+						} catch (UnknownHostException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
 						}
 					}
 				}
