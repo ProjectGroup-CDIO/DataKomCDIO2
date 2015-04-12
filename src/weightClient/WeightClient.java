@@ -22,17 +22,16 @@ public class WeightClient {
 	private static BufferedReader read;
 	private static PrintWriter write;
 
-	String PA;
-	String MV;
-	String TL;
-	String peas;
-	String mavi;
-	String thli;
+	static String PA;
+	static String MV;
+	static String TL;
+	static String peas;
+	static String mavi;
+	static String thli;
 	
-	private String[] logins = new String[6];
+	static private String[] logins = new String[6];
 
-	void fillLogins(){
-
+	static void fillLogins(){
 		logins[0] = PA;
 		logins[1] = peas;
 		logins[2] = MV;
@@ -84,7 +83,7 @@ public class WeightClient {
 		//Check for om ports og sockets ikke er null, hvis de ikke er 
 		if(socket != null && outputStream != null && inputstream != null){
 			System.out.println("Connection Established");
-			printMenu();
+			operatorIdentification();
 			//scanner tjekker for om der er en string
 			while(scanner.hasNext()){				
 				String dataInput = scanner.nextLine();				
@@ -108,7 +107,20 @@ public class WeightClient {
 		} else System.out.println("Unable to establish connection");
 	}
 
-
+	public static void operatorIdentification(){
+		System.out.println("Please identify yourself with initials.");
+		String loginInput = scanner.nextLine();
+		if(loginInput == logins[0] || loginInput == logins[2] || loginInput == logins[4]){
+			System.out.println("Welcome, " + loginInput +". Please enter your password.");
+			String loginInput2 = scanner.nextLine();
+			if(loginInput2 == logins[1] || loginInput2 == logins[3] || loginInput2 == logins[5]){
+				System.out.println("Success!");
+				System.out.println("Welcome, " + loginInput + ".");
+				printMenu();
+			}
+		}
+	}
+	
 	public static void printMenu() {
 		System.out.println("Write RM20 8 \"<message>\" \"<message>\" \"<message>\"  to send a mesage to the scale and wait for a reply");
 		System.out.println("Write P111 \"<message>\" to send a message to the instruktion display(max 30 chars)");
