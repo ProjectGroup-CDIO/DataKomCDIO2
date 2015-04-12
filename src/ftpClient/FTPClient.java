@@ -47,14 +47,14 @@ public class FTPClient extends Thread {
 			request = "list";
 		}else if(input.toLowerCase().equals("get") || input.toLowerCase().equals("retr")) {
 			request = "retr";
-		}
+		}else request = input;
 	}
 
 	public void sendRequest() throws IOException {
 		//			byte[] sendReq = new byte[request.length()];
 		//			sendReq = request.getBytes(); 
 		//			out.write(sendReq, 0, sendReq.length);
-//		out.writeBytes(request);
+		//		out.writeBytes(request);
 		writeOut.print(request);
 
 	}
@@ -62,7 +62,7 @@ public class FTPClient extends Thread {
 	public void getResponse() throws IOException {
 
 		ear.start();
-		
+
 		StringBuffer everything = new StringBuffer("");
 		String line;
 		while(socket.getInputStream() != null) {
@@ -71,14 +71,14 @@ public class FTPClient extends Thread {
 		}
 		response = everything.toString();
 	}
-	
-	
+
+
 	public void printResponse() {
 		System.out.println(response);
 	}
 
 	public void useResponse() {
-		
+
 	}
 
 	public void printMenu() {
@@ -144,7 +144,7 @@ public class FTPClient extends Thread {
 
 	public void Login() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 
