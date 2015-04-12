@@ -52,18 +52,15 @@ public class FTPClient extends Thread {
 
 	public void makeRequest() {
 		String input = keyb.nextLine();
-		if(input.toLowerCase().equals("ls") || input.toLowerCase().equals("list")) {
-			request = "list";
-		}else if(input.toLowerCase().equals("get") || input.toLowerCase().equals("retr")) {
-			request = "retr";
-		}else request = input;
+//		if(input.toLowerCase().equals("ls") || input.toLowerCase().equals("list")) {
+//			request = "list";
+//		}else if(input.toLowerCase().equals("get") || input.toLowerCase().equals("retr")) {
+//			request = "retr";
+//		}else
+			request = input;
 	}
 
 	public void sendRequest() throws IOException {
-		//			byte[] sendReq = new byte[request.length()];
-		//			sendReq = request.getBytes(); 
-		//			out.write(sendReq, 0, sendReq.length);
-		//		out.writeBytes(request);
 		System.out.println(request);
 		out.writeBytes(request + "\r\n");
 
@@ -71,13 +68,7 @@ public class FTPClient extends Thread {
 
 	public void getResponse() throws IOException {
 		ear.start();
-		StringBuffer everything = new StringBuffer("");
-		String line;
-		while(socket.getInputStream() != null) {
-			line = in.readLine();
-			everything.append("\n"+line);			
-		}
-		response = everything.toString();
+
 	}
 
 
@@ -126,6 +117,14 @@ public class FTPClient extends Thread {
 	    
 
 	}
+	
+	public void Login() throws IOException {
+		out.writeBytes("user helmut" + "\r\n");
+	//	Thread.sleep(100);
+		out.writeBytes("pass 123" + "\r\n");
+
+	}
+
 
 	public void run() {
 		FTPClient ftp;
@@ -186,10 +185,6 @@ public class FTPClient extends Thread {
 		}
 	}
 
-	public void Login() {
-		// TODO Auto-generated method stub
-
-	}
 
 
 
@@ -203,20 +198,14 @@ public class FTPClient extends Thread {
 	//				for(int i = 1; i <= Integer.parseInt(inline); i++){
 	//					line = storeText.readLine();
 	//				}
-	//				outstream.writeBytes("You have choosen:");
-	//				outstream.writeBytes(line);
 	//
-	//				outstream.writeBytes("  "+line.indexOf(",") + "\n\r");
-	//				outstream.writeBytes("  "+(line.substring(line.indexOf(",")+1, line.length()).indexOf(",")+line.indexOf(",")+1) + "\n\r");
-	//				
-	//				
-	////				for(){
-	////					
-	////				}
-	//				//String ProduktNr
-	//				//produkt nr
-	//				// produkt name
-	//				//produkt total weight
+	//				String[] vare = line.split(",");
+	//				outstream.writeBytes("You have choosen:");
+	//				outstream.writeBytes("From - VareID: "+vare[0]+", Vare: "+vare[1]+", VareWeight: "+vare[2]);
+	//
+	//				String produktNr = vare[0];
+	//				String produktName = vare[1];
+	//				String produktWeight = vare[2];
 	//
 	//
 	//			}else{
