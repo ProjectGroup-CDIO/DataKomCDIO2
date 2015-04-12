@@ -10,7 +10,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.BindException;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -27,7 +26,6 @@ public class FTPClient extends Thread {
 	private Socket socket;
 	public static BufferedReader in; 
 	private DataOutputStream out;
-	private PrintWriter writeOut;
 	private FileOutputStream fileOut;
 	private Scanner keyb = new Scanner(System.in);
 	private String request;
@@ -43,33 +41,23 @@ public class FTPClient extends Thread {
 
 	public void makeRequest() {
 		String input = keyb.nextLine();
-		if(input.toLowerCase().equals("ls") || input.toLowerCase().equals("list")) {
-			request = "list";
-		}else if(input.toLowerCase().equals("get") || input.toLowerCase().equals("retr")) {
-			request = "retr";
-		}else request = input;
+//		if(input.toLowerCase().equals("ls") || input.toLowerCase().equals("list")) {
+//			request = "list";
+//		}else if(input.toLowerCase().equals("get") || input.toLowerCase().equals("retr")) {
+//			request = "retr";
+//		}else
+			request = input;
 	}
 
 	public void sendRequest() throws IOException {
-		//			byte[] sendReq = new byte[request.length()];
-		//			sendReq = request.getBytes(); 
-		//			out.write(sendReq, 0, sendReq.length);
-		//		out.writeBytes(request);
-		writeOut.print(request);	
 		System.out.println(request);
 		out.writeBytes(request + "\r\n");
-		writeOut.println(request);
+		
 	}
 
 	public void getResponse() throws IOException {
 		ear.start();
-		StringBuffer everything = new StringBuffer("");
-		String line;
-		while(socket.getInputStream() != null) {
-			line = in.readLine();
-			everything.append("\n"+line);			
-		}
-		response = everything.toString();
+
 	}
 
 
@@ -89,6 +77,14 @@ public class FTPClient extends Thread {
 	public void writeFile(File file) throws FileNotFoundException {
 		fileOut = new FileOutputStream(file);
 	}
+	
+	public void Login() throws IOException {
+		out.writeBytes("user helmut" + "\r\n");
+	//	Thread.sleep(100);
+		out.writeBytes("pass 123" + "\r\n");
+
+	}
+
 
 	public void run() {
 		FTPClient ftp;
@@ -142,10 +138,6 @@ public class FTPClient extends Thread {
 		}
 	}
 
-	public void Login() {
-		// TODO Auto-generated method stub
-
-	}
 
 
 
