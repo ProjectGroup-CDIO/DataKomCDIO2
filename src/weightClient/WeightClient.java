@@ -28,20 +28,21 @@ public class WeightClient {
 		
 		//printMenu();
 		//run();
-		FTPClient FTPCOne = new FTPClient("10.16.173.70", 21);
+		FTPClient FTPCOne = new FTPClient("192.168.2.2", 21);
+		//FTPCOne.start();
+		FTPCOne.Login();
 		FTPCOne.getResponse();
-		FTPCOne.printResponse();
+				
 		
 		
-		FTPCOne.makeRequest();
-		FTPCOne.sendRequest();
-		FTPCOne.getResponse();
+		
 		
 		
 		
 		while(active){
 			
-			
+			FTPCOne.makeRequest();
+			FTPCOne.sendRequest();
 
 		}
 

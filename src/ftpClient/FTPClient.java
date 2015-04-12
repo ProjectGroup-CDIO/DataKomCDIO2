@@ -24,12 +24,13 @@ import java.util.Scanner;
 public class FTPClient extends Thread {
 
 	private Socket socket;
-	private BufferedReader in; 
+	public static BufferedReader in; 
 	private DataOutputStream out;
 	private FileOutputStream fileOut;
 	private Scanner keyb = new Scanner(System.in);
 	private String request;
 	private String response;
+	private ServerListener ear = new ServerListener();
 
 	public FTPClient(String serverIP, int port) throws IOException, UnknownHostException {
 		socket = new Socket(serverIP, port);
@@ -45,18 +46,18 @@ public class FTPClient extends Thread {
 		//			byte[] sendReq = new byte[request.length()];
 		//			sendReq = request.getBytes(); 
 		//			out.write(sendReq, 0, sendReq.length);
-		out.writeBytes(request);
+		//out.writeBytes(request);
+		System.out.println(request);
+		//out.writeChars(request);
+		out.writeUTF(request);
 	}
 
 	public void getResponse() throws IOException {
-		StringBuilder everything = new StringBuilder();
-		String line;
-		while( (line = in.readLine()) != null) {
-			everything.append(line);
-		}
-		response = everything.toString();
+		ear.start();
+		
 	}
-
+	
+	
 	public void printResponse() {
 		System.out.println(response);
 	}
@@ -115,6 +116,11 @@ public class FTPClient extends Thread {
 		case 2: 
 		default: 
 		}
+	}
+
+	public void Login() {
+		// TODO Auto-generated method stub
+		
 	}
 
 
