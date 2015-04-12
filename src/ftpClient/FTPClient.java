@@ -55,6 +55,7 @@ public class FTPClient extends Thread {
 		//		out.writeBytes(request);
 		System.out.println(request);
 		out.writeBytes(request + "\r\n");
+		
 	}
 
 	public void getResponse() throws IOException {
