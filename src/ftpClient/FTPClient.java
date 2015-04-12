@@ -38,7 +38,12 @@ public class FTPClient extends Thread {
 	}
 
 	public void makeRequest() {
-		request = keyb.nextLine(); 
+		String input = keyb.nextLine();
+		if(input.toLowerCase().equals("ls") || input.toLowerCase().equals("list")) {
+			request = "list";
+		}else if(input.toLowerCase().equals("get") || input.toLowerCase().equals("retr")) {
+			request = "retr";
+		}
 	}
 
 	public void sendRequest() throws IOException {
@@ -49,10 +54,11 @@ public class FTPClient extends Thread {
 	}
 
 	public void getResponse() throws IOException {
-		StringBuilder everything = new StringBuilder();
+		StringBuffer everything = new StringBuffer("");
 		String line;
-		while( (line = in.readLine()) != null) {
-			everything.append(line);
+		while(socket.getInputStream() != null) {
+			line = in.readLine();
+			everything.append("\n"+line);			
 		}
 		response = everything.toString();
 	}
@@ -89,31 +95,40 @@ public class FTPClient extends Thread {
 				System.out.println("Error006: "+e.getMessage());
 				e.printStackTrace();
 			} catch (BindException e) {
-				System.err.println("Error009: "+e.getMessage());
+				System.out.println("Error009: "+e.getMessage());
 				e.printStackTrace();
 			} catch (IOException e) {
 				System.out.println("Error007: "+e.getMessage());
 				e.printStackTrace();
 			} catch (NumberFormatException e) {
 				System.out.println("Error011: "+e.getMessage());
-			}
+			} 
 		}
-		printMenu();
-		int input = Integer.parseInt(keyb.nextLine());
-		switch(input) {
-		case 1: //transfer file to server
-			while(true) {
-				System.out.print("Indtast sti til fil der skal overføres: ");
-				String file = keyb.nextLine();
-				System.out.println();
-				try {
-					ftp.writeFile(new File(file));			
-				} catch (FileNotFoundException e) {
-					System.out.println("Error010: "+e.getMessage());
+
+		while(true) {
+			printMenu();
+			int input = Integer.parseInt(keyb.nextLine());
+			switch(input) {
+			case 1: //transfer file to server
+				while(true) {
+					System.out.print("Indtast sti til fil der skal overføres: ");
+					String file = keyb.nextLine();
+					System.out.println();
+					if(file.equals("q") || file.equals("quit")) {
+						break;
+					} else {
+						try {
+							ftp.writeFile(new File(file));	
+							break;
+						} catch (FileNotFoundException e) {
+							System.out.println("Error010: "+e.getMessage());
+						}
+					}
 				}
+			case 2: 
+			default: 
+				System.out.println("Prøv igen");
 			}
-		case 2: 
-		default: 
 		}
 	}
 
