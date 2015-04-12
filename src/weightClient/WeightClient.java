@@ -28,7 +28,7 @@ public class WeightClient {
 	static String peas;
 	static String mavi;
 	static String thli;
-	
+
 	static private String[] logins = new String[6];
 
 	static void fillLogins(){
@@ -108,19 +108,23 @@ public class WeightClient {
 	}
 
 	public static void operatorIdentification(){
-		System.out.println("Please identify yourself with initials.");
-		String loginInput = scanner.nextLine();
-		if(loginInput == logins[0] || loginInput == logins[2] || loginInput == logins[4]){
-			System.out.println("Welcome, " + loginInput +". Please enter your password.");
-			String loginInput2 = scanner.nextLine();
-			if(loginInput2 == logins[1] || loginInput2 == logins[3] || loginInput2 == logins[5]){
-				System.out.println("Success!");
-				System.out.println("Welcome, " + loginInput + ".");
-				printMenu();
+		while(active){
+			System.out.println("Please identify yourself with initials.");
+			String loginInput = scanner.nextLine();
+			if(loginInput == logins[0] || loginInput == logins[2] || loginInput == logins[4]){
+				System.out.println("Welcome, " + loginInput +". Please enter your password.");
+				String loginInput2 = scanner.nextLine();
+				if(loginInput2 == logins[1] || loginInput2 == logins[3] || loginInput2 == logins[5]){
+					System.out.println("Success!");
+					System.out.println("Welcome, " + loginInput + ".");
+					printMenu();
+				}
+				System.out.println("Sorry, password was incorrect.");
 			}
+			System.out.println("Sorry, those were not valid initials.");
 		}
 	}
-	
+
 	public static void printMenu() {
 		System.out.println("Write RM20 8 \"<message>\" \"<message>\" \"<message>\"  to send a mesage to the scale and wait for a reply");
 		System.out.println("Write P111 \"<message>\" to send a message to the instruktion display(max 30 chars)");
