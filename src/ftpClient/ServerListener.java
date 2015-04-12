@@ -1,14 +1,8 @@
 package ftpClient;
 
-import java.io.IOException;
-
 public class ServerListener extends Thread {
 	String line = "";
 	String finalLine = "";
-	
-	
-
-	
 	
 	public void run(){
 		try {

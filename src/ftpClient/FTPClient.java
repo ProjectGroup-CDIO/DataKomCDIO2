@@ -36,6 +36,7 @@ public class FTPClient extends Thread {
 		socket = new Socket(serverIP, port);
 		in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		out = new DataOutputStream(socket.getOutputStream());
+	
 	}
 
 	public void makeRequest() {
@@ -47,9 +48,12 @@ public class FTPClient extends Thread {
 		//			sendReq = request.getBytes(); 
 		//			out.write(sendReq, 0, sendReq.length);
 		//out.writeBytes(request);
-		System.out.println(request);
+		//System.out.println(request);
 		//out.writeChars(request);
-		out.writeUTF(request);
+		//out.writeUTF(response);
+		out.writeBytes(request);
+		out.flush();
+		//System.out.println(response);
 	}
 
 	public void getResponse() throws IOException {

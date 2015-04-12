@@ -30,7 +30,7 @@ public class WeightClient {
 		//run();
 		FTPClient FTPCOne = new FTPClient("192.168.2.2", 21);
 		//FTPCOne.start();
-		FTPCOne.Login();
+		//FTPCOne.Login();
 		FTPCOne.getResponse();
 				
 		
