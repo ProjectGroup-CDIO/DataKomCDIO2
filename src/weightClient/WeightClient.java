@@ -36,12 +36,12 @@ public class WeightClient {
 
 		
 		
-		printMenu();
-		run();
+		//printMenu();
+		//run();
 
 
 		while(active){
-
+			
 			FTPCOne.makeRequest();
 			FTPCOne.sendRequest();
 		}
