@@ -50,10 +50,6 @@ public class FTPClient extends Thread {
 	}
 
 	public void sendRequest() throws IOException {
-		//			byte[] sendReq = new byte[request.length()];
-		//			sendReq = request.getBytes(); 
-		//			out.write(sendReq, 0, sendReq.length);
-		//		out.writeBytes(request);
 		System.out.println(request);
 		out.writeBytes(request + "\r\n");
 		
@@ -61,14 +57,7 @@ public class FTPClient extends Thread {
 
 	public void getResponse() throws IOException {
 		ear.start();
-		//stop commenting this in!
-//		StringBuffer everything = new StringBuffer("");
-//		String line;
-//		while(socket.getInputStream() != null) {
-//			line = in.readLine();
-//			everything.append("\n"+line);			
-//		}
-//		response = everything.toString();
+
 	}
 
 
