@@ -191,26 +191,33 @@ public class FTPClient extends Thread {
 	//	private int productVerification(String inline,int nrOfProducts) {
 	//		try {
 	//			storeText = new BufferedReader(new FileReader("Store.txt"));
-	//			String line = "";
-	//			
-	//			if(nrOfProducts >= Integer.parseInt(inline)){
-	//				for(int i = 1; i <= Integer.parseInt(inline); i++){
-	//					line = storeText.readLine();
-	//				}
-	//
-	//				String[] vare = line.split(",");
-	//				outstream.writeBytes("You have choosen:");
-	//				outstream.writeBytes("From - VareID: "+vare[0]+", Vare: "+vare[1]+", VareWeight: "+vare[2]);
-	//
-	//				String produktNr = vare[0];
-	//				String produktName = vare[1];
-	//				String produktWeight = vare[2];
-	//
-	//
-	//			}else{
-	//				return 0;
-	//			}
-	//
+	//			String line;String input = "";
+	//			while ((line = storeText.readLine()) != null) input += line + '\n';
+	//		
+	//		    storeText.close();
+	//		    //System.out.println(input);
+	//		    			        
+	//		    String vare[] = input.split("\n");
+	//		    //System.out.println(vare[Integer.parseInt(inline)]);
+	//		    String valgt[] = vare[Integer.parseInt(inline)].split(",");
+	//		    valgt[2]="150"; ///////// Her skal der stå nyVaegt
+	//		    vare[Integer.parseInt(inline)]=valgt[0]+","+valgt[1]+","+valgt[2];
+	//		    
+	//		    //System.out.println(vare[Integer.parseInt(inline)]);
+	//		    FileWriter output = new FileWriter("Store.txt");
+	//		    try(PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("Store.txt", true)))) {
+	//		    	for(int i = 0; nrOfProducts-1 >= i;i++){
+	//		    		if(i!=nrOfProducts-1){
+	//		    			out.println(vare[i]);
+	//		    		}else{
+	//		    			out.print(vare[i]);
+	//		    		}
+	//		    	}
+	//		    }catch (Exception e) {
+	//		    					// TODO Auto-generated catch block
+	//		    					e.printStackTrace();
+	//		    }
+	//		    output.close();
 	//		} catch (Exception e) {
 	//			// TODO Auto-generated catch block
 	//			e.printStackTrace();
@@ -247,6 +254,5 @@ public class FTPClient extends Thread {
 	//		// TODO Auto-generated catch block
 	//		e2.printStackTrace();
 	//	}
-
 
 }
