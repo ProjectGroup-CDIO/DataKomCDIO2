@@ -125,7 +125,6 @@ public class FTPClient extends Thread {
 
 	}
 
-
 	public void run() {
 		FTPClient ftp;
 		while(true) {
