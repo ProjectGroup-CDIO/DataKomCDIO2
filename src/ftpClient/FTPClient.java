@@ -4,14 +4,17 @@
 package ftpClient;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
@@ -276,44 +279,49 @@ public class FTPClient extends Thread {
 
 
 
-	//	private int productVerification(String inline,int nrOfProducts) {
-	//		try {
-	//			storeText = new BufferedReader(new FileReader("Store.txt"));
-	//			String line = "";
-	//			
-	//			if(nrOfProducts >= Integer.parseInt(inline)){
-	//				for(int i = 1; i <= Integer.parseInt(inline); i++){
-	//					line = storeText.readLine();
-	//				}
-	//				outstream.writeBytes("You have choosen:");
-	//				outstream.writeBytes(line);
-	//
-	//				outstream.writeBytes("  "+line.indexOf(",") + "\n\r");
-	//				outstream.writeBytes("  "+(line.substring(line.indexOf(",")+1, line.length()).indexOf(",")+line.indexOf(",")+1) + "\n\r");
-	//				
-	//				
-	////				for(){
-	////					
-	////				}
-	//				//String ProduktNr
-	//				//produkt nr
-	//				// produkt name
-	//				//produkt total weight
-	//
-	//
-	//			}else{
-	//				return 0;
-	//			}
-	//
-	//		} catch (Exception e) {
-	//			// TODO Auto-generated catch block
-	//			e.printStackTrace();
-	//		}
-	//		return 0;
-	//
-	//
-	//	}
-
+	public void productMani() {
+			try {
+				BufferedReader storeText = new BufferedReader(new FileReader("Store.txt"));
+				String line;String input = "";
+				while ((line = storeText.readLine()) != null) input += line + '\n';
+			
+			    storeText.close();
+			    System.out.println(input);			        
+			    String vare[] = input.split("\n");
+			    int nrOfProducts = vare.length;
+			    System.out.println("Vaelg et vare nr");
+			    String inline = keyb.nextLine();
+			    
+			    System.out.println("Du har valgt: "+vare[Integer.parseInt(inline)]);
+			    String valgt[] = vare[Integer.parseInt(inline)].split(",");
+			    System.out.println("Vælg ny vaegt for "+valgt[1]);
+			    String nyVaegt = keyb.nextLine();
+			    String gamleVaegt =valgt[2];
+			    valgt[2]=nyVaegt;
+			    vare[Integer.parseInt(inline)]=valgt[0]+","+valgt[1]+","+valgt[2];
+			    
+			    //System.out.println(vare[Integer.parseInt(inline)]);
+			    FileWriter output = new FileWriter("Store.txt");
+			    try(PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("Store.txt", true)))) {
+			    	for(int i = 0; nrOfProducts-1 >= i;i++){
+			    		if(i!=nrOfProducts-1){
+			    			out.println(vare[i]);
+			    		}else{
+			    			out.print(vare[i]);
+			    		}
+			    	}UserCommandLog.UpdateLog(valgt[1], gamleVaegt, valgt[2]);
+			    	
+			    }catch (Exception e) {
+			    					// TODO Auto-generated catch block
+			    					e.printStackTrace();
+			    }
+			    output.close();
+			    
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	}
 
 	//	try {
 	//		
