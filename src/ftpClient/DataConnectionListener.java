@@ -1,20 +1,13 @@
 package ftpClient;
 
-import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Scanner;
-
 import weightClient.WeightClient;
 
 
@@ -23,7 +16,7 @@ public class DataConnectionListener extends Thread {
 	private int portNumber;
 	private Socket dataSocket = null;
 	//	private ServerSocket serverSocket = new ServerSocket(portNumber);
-	
+	FTPClient FTPCOne = null;
 	private String PASV = "";
 	private DataInputStream dataIn = null;
 	private FileOutputStream fileOut =null;
@@ -33,7 +26,7 @@ public class DataConnectionListener extends Thread {
 
 
 	public DataConnectionListener(FTPClient fTPCOne) {
-		
+		FTPCOne = fTPCOne;
 	}
 
 	public void getPASV(){
@@ -69,7 +62,7 @@ public class DataConnectionListener extends Thread {
 		fileOut= new FileOutputStream(new File(fileDest));
 	}
 	public void readData() throws IOException, InterruptedException{
-		getPASV();
+		
 		setupSocket();
 		int fileSize;
 		//set connection to binary data  - sends both text and pictures.
