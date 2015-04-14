@@ -22,53 +22,54 @@ public class Main {
 	public static void main(String[] args) throws UnknownHostException, IOException {
 		FTPClient ftp = new FTPClient("127.0.0.1", 21);
 		WeightClient weightc = new WeightClient();
-		ftp.login();
+/*		ftp.login();
 
-		ftp.startEar();
+		ftp.startEar();*/
 
-
-		while(true){
+		Scanner keyb = new Scanner(System.in);
+		System.out.println("Press 1 for FTP Client");
+		System.out.println("Press 2 for Weight Client");
+		
+		while(active){
+			String input = " ";
 			try {
-				Thread.sleep(200);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				input = keyb.nextLine();
+			} catch (NoSuchElementException e1) {
+				System.out.println("Error: "+e1.getMessage());
+				//e1.printStackTrace();
 			}
-			while(active){
-				active = false;
-				System.out.println("Please write a command");
-				ftp.makeRequest();
-				ftp.sendRequest();
-				Scanner keyb = new Scanner(System.in);
-				System.out.println("Press 1 for FTP Client");
-				System.out.println("Press 2 for Weight Client");
+	
+			if(!(input.isEmpty())) {
+				if(input.equals("1")) {
+					while(true){
+						try {
+							Thread.sleep(200);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						while(active){
+							active = false;
+							System.out.println("Please write a command");
+							ftp.login();
+							ftp.startEar();
+							ftp.makeRequest();
+							ftp.sendRequest();
+							ftp.printMenu();
+						}
+					}
+				}
+				if(input.equals("2")) {
+					weightc.printMenu();
+				}else{
+					active = true;
+					continue;
+				}
 				
-				String input = " ";
-				try {
-					input = keyb.nextLine();
-				} catch (NoSuchElementException e1) {
-					System.out.println("Error: "+e1.getMessage());
-					//e1.printStackTrace();
-				}
-
-				if(!(input.isEmpty())) {
-					if(input.equals("1")) {
-						ftp.printMenu();
-					}
-					if(input.equals("2")) {
-						weightc.printMenu();
-					}else{
-						active = true;
-						continue;
-					}
-					
-				}
-				keyb.close();
 			}
+			keyb.close();
 		}
-
-
-
+		
 	}
 
 }
