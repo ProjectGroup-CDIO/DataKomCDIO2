@@ -2,9 +2,9 @@
 2,Banana,117
 3,Currant,145
 4,Elderberry,124
-5,Grape,115
-6,Kiwi,128
+5,Grape,116
+6,Kiwi,200
 7,Lemon,131
 8,Mango,145
 9,Orange,100
-10,Pear,109
+10,Pear,115

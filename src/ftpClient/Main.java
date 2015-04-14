@@ -27,6 +27,7 @@ public class Main {
 		ftp.startEar();*/
 		
 		while(active){
+			active = false; 
 			Scanner keyb = new Scanner(System.in);
 			System.out.println("Press 1 for FTP Client");
 			System.out.println("Press 2 for Weight Client");
@@ -47,19 +48,21 @@ public class Main {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
+						active = true;
 						while(active){
 							active = false;
-							System.out.println("Please write a command");
 							ftp.login();
 							ftp.startEar();
+							ftp.printMenu();
 							ftp.makeRequest();
 							ftp.sendRequest();
-							ftp.printMenu();
 						}
 					}
 				}
 				if(input.equals("2")) {
 					ftp.productMani();
+					active = true;
+					continue;
 				}else{
 					active = true;
 					continue;

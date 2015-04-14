@@ -53,7 +53,7 @@ public class FTPClient extends Thread {
 
 	public synchronized void sendRequest() throws IOException {
 		System.out.println(request);
-		if(request.toUpperCase().startsWith("RETR ")){
+		if(request.toUpperCase().equals("1")){
 			out.writeBytes("PASV"+"\r\n");
 			try {
 				Thread.sleep(50);
@@ -68,7 +68,7 @@ public class FTPClient extends Thread {
 				e.printStackTrace();
 			}
 
-		}else if(request.toUpperCase().startsWith("LIST")){
+		}else if(request.toUpperCase().equals("2")){
 			out.writeBytes("PASV"+"\r\n");
 			try {
 				Thread.sleep(50);
@@ -102,71 +102,14 @@ public class FTPClient extends Thread {
 	}
 
 	public void printMenu() {
-		System.out.println("Tast 1 for at overføre en fil til ZYBO board");
-		System.out.println("Tast 2 for at sende en kommando til ZYBO board");		
+		System.out.println("Tast 1 for at hente en fil");
+		System.out.println("Tast 2 for at se en liste over filer og mapper");		
 	}
 
 
 	public void login() throws IOException {
 		out.writeBytes("user Thomas" + "\r\n");
 		out.writeBytes("pass hejhej" + "\r\n");
-
-	}
-
-
-	public void run() {
-
-//		FTPClient ftp;
-//
-//		while(true) {
-//			System.out.print("Indtast IP du vil forbinde til: ");
-//			String IP = keyb.nextLine();
-//			System.out.print("\nIndtast port# du vil forbinde til: ");
-//			System.out.println();
-//			try {
-//				int port = Integer.parseInt(keyb.nextLine());
-//				ftp = new FTPClient(IP, port);
-//				break;
-//			} catch (UnknownHostException e) {
-//				System.out.println("Error006: "+e.getMessage());
-//				e.printStackTrace();
-//			} catch (BindException e) {
-//				System.out.println("Error009: "+e.getMessage());
-//				e.printStackTrace();
-//			} catch (IOException e) {
-//				System.out.println("Error007: "+e.getMessage());
-//				e.printStackTrace();
-//			} catch (NumberFormatException e) {
-//				System.out.println("Error011: "+e.getMessage());
-//			} 
-//		}
-//
-//		while(true) {
-//			printMenu();
-//			int input = Integer.parseInt(keyb.nextLine());
-//			switch(input) {
-//			case 1: //transfer file to server
-//				while(true) {
-//					System.out.print("Indtast sti til fil der skal overføres: ");
-//					String file = keyb.nextLine();
-//					System.out.println();
-//					if(file.equals("q") || file.equals("quit")) {
-//						break;
-//					} else {
-//						try {
-//							ftp.writeFile(new File(file));	
-//							break;
-//						} catch (FileNotFoundException e) {
-//							System.out.println("Error010: "+e.getMessage());
-//						}
-//					}
-//				}
-//			case 2: 
-//			default: 
-//				System.out.println("Prøv igen");
-//			}
-//		}
-//
 
 	}
 
@@ -207,7 +150,7 @@ public class FTPClient extends Thread {
 		Thread.sleep(50);
 		int fileSize;
 
-		if(request2.startsWith("LIST")){
+		if(request2.startsWith("2")){
 			setupSocket();
 			out.writeBytes("TYPE A\r\n");
 			BufferedReader br = new BufferedReader(new InputStreamReader(dataSocket.getInputStream()));
@@ -224,20 +167,20 @@ public class FTPClient extends Thread {
 
 
 		//this one moves a file.
-		if(request2.toUpperCase().startsWith("RETR ")){
-
+		if(request2.toUpperCase().equals("1")){
 			setupSocket();
-
-
-			//set connection to binary data  - sends both text and pictures.
 			out.writeBytes("TYPE I\r\n");
+			System.out.print("Indtast sti til ønskede fil: ");
+			String sti = keyb.nextLine();
+			System.out.println();
+			//set connection to binary data  - sends both text and pictures.
 			//System.out.println("PLease write TestKitten.jpeg or store.txt");
 			//String fileSource = keyb.nextLine();
-			out.writeBytes("SIZE "+request2.substring(5,request2.length())+"\r\n");
-			Thread.sleep(10);
+			out.writeBytes("SIZE "+sti.trim()+"\r\n");
+			Thread.sleep(100);
 			System.out.println("SIZE? :"+(getEar().getLine().substring(4,getEar().getLine().length())));
-
-			fileSize =(int) 2 *Integer.parseInt(getEar().getLine().substring(4,getEar().getLine().length()));
+			System.out.println(getEar().getLine());
+			fileSize =(int) 2 *Integer.parseInt(getEar().getLine().substring(4,getEar().getLine().length()).trim());
 			byte[] buf = new byte[fileSize];
 			setupInstreamData();
 			try {
@@ -247,7 +190,7 @@ public class FTPClient extends Thread {
 
 				//e.printStackTrace();
 			}
-			out.writeBytes(request2.trim()+"\r\n");
+			out.writeBytes("RETR "+sti.trim()+"\r\n");
 			Thread.sleep(50);
 			System.out.println("DataAvail: " +dataIn.available());
 			int i= 0;
@@ -292,18 +235,18 @@ public class FTPClient extends Thread {
 			    System.out.println("Vaelg et vare nr");
 			    String inline = keyb.nextLine();
 			    
-			    System.out.println("Du har valgt: "+vare[Integer.parseInt(inline)]);
-			    String valgt[] = vare[Integer.parseInt(inline)].split(",");
+			    System.out.println("Du har valgt: "+vare[Integer.parseInt(inline)-1]);
+			    String valgt[] = vare[Integer.parseInt(inline)-1].split(",");
 			    System.out.println("Vælg ny vaegt for "+valgt[1]);
 			    String nyVaegt = keyb.nextLine();
 			    String gamleVaegt =valgt[2];
 			    valgt[2]=nyVaegt;
-			    vare[Integer.parseInt(inline)]=valgt[0]+","+valgt[1]+","+valgt[2];
+			    vare[Integer.parseInt(inline)-1]=valgt[0]+","+valgt[1]+","+valgt[2];
 			    
 			    //System.out.println(vare[Integer.parseInt(inline)]);
 			    FileWriter output = new FileWriter("Store.txt");
 			    try(PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("Store.txt", true)))) {
-			    	for(int i = 0; nrOfProducts-1 >= i;i++){
+			    	for(int i = 0; nrOfProducts > i; i++){
 			    		if(i!=nrOfProducts-1){
 			    			out.println(vare[i]);
 			    		}else{

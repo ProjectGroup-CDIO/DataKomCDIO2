@@ -15,7 +15,7 @@ public class UserCommandLog {
     	cal.getTime();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		    try(PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("LogFile.txt", true)))) {
-			    out.println(sdf.format("Operatøren har ændret vaegten for "+produkt+" fra "+gamleVaegt+" til "+nyVaegt+", "+cal.getTime()));
+			    out.println("Operatøren har ændret vaegten for "+produkt+" fra "+gamleVaegt+" til "+nyVaegt+", "+sdf.format(cal.getTime()));
 			}catch (IOException e) {
 			    System.out.println("Exception occured no log created.");
 			
