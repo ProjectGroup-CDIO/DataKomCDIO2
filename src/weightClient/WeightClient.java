@@ -1,6 +1,8 @@
 package weightClient;
 
+import ftpClient.DataConnectionListener;
 import ftpClient.FTPClient;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -24,28 +26,37 @@ public class WeightClient {
 	private static PrintWriter write;
 	static private String[] logins = new String[6];
 
-	public static void main(String[] args) throws UnknownHostException, IOException {
+	public static void main(String[] args) throws UnknownHostException, IOException, InterruptedException {
 
 
 		//printMenu();
 		//run();
-		FTPClient FTPCOne = new FTPClient("192.168.2.2", 21);
+		
 		//FTPCOne.start();
 		
-		FTPCOne.getResponse();
+		FTPClient FTPCOne = new FTPClient("127.0.0.1", 21);
+		
+		
 		FTPCOne.Login();
 		
 		
+		
 		//printMenu();
 		//run();
-
-
-		while(active){
-			
+		FTPCOne.useResponse();
+		FTPCOne.getResponse();
+		
+		while(true){
+	
+		while(getActive()){
 			FTPCOne.makeRequest();
 			FTPCOne.sendRequest();
+			setActive(false);
+			
+		}
 		}
 		
+		//FTPCOne.start();
 		
 
 		
@@ -117,7 +128,7 @@ public class WeightClient {
 		}
 
 		public static void operatorIdentification(){
-			while(active){
+			while(getActive()){
 				System.out.println("Please identify yourself with initials.");
 				String loginInput = scanner.nextLine();
 				if(loginInput == logins[0] || loginInput == logins[2] || loginInput == logins[4]){
@@ -144,5 +155,13 @@ public class WeightClient {
 			System.out.println("Press Z and ENTER to zero scale");
 			System.out.println("Write DW and ENTER to display weight on scale"); //doesnt work?
 			System.out.println("Write Q and ENTER to close everything.");
+		}
+
+		public static boolean getActive() {
+			return active;
+		}
+
+		public static void setActive(boolean active) {
+			WeightClient.active = active;
 		}	
 	}

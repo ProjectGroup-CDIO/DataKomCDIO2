@@ -1,8 +1,8 @@
 package ftpClient;
 
 public class ServerListener extends Thread {
-	String line = "";
-	String finalLine = "";
+	public	String line = "";
+	public String finalLine = "";
 	
 	public void run(){
 		try {
@@ -18,5 +18,10 @@ public class ServerListener extends Thread {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+	}
+
+	public String getLine() {
+		// TODO Auto-generated method stub
+		return line;
 	}
 }

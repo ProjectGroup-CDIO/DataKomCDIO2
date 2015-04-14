@@ -25,38 +25,39 @@ public class FTPClient extends Thread {
 
 	private Socket socket;
 	public static BufferedReader in; 
-	private DataOutputStream out;
-	private FileOutputStream fileOut;
+	public DataOutputStream out;
 	private Scanner keyb = new Scanner(System.in);
 	private String request;
 	private String response;
 	private ServerListener ear = new ServerListener();
-
+	DataConnectionListener data = new DataConnectionListener();
+	
+	
 	public FTPClient(String serverIP, int port) throws IOException, UnknownHostException {
 		socket = new Socket(serverIP, port);
 		in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-		out = new DataOutputStream(socket.getOutputStream());
-		 
+		out = new DataOutputStream(socket.getOutputStream()); 
 	}
 
-	public void makeRequest() {
+	public synchronized void makeRequest() {
+	
 		String input = keyb.nextLine();
-//		if(input.toLowerCase().equals("ls") || input.toLowerCase().equals("list")) {
-//			request = "list";
-//		}else if(input.toLowerCase().equals("get") || input.toLowerCase().equals("retr")) {
-//			request = "retr";
-//		}else
-			request = input;
+		request = input;
 	}
 
-	public void sendRequest() throws IOException {
+	public synchronized void sendRequest() throws IOException {
 		System.out.println(request);
+		if(request.toUpperCase().contains("LIST")){
+			out.writeBytes("PASV"+"\r\n");
+			
 		out.writeBytes(request + "\r\n");
+		}
+		
 		
 	}
 
 	public void getResponse() throws IOException {
-		ear.start();
+		getEar().start();
 
 	}
 
@@ -65,7 +66,7 @@ public class FTPClient extends Thread {
 		System.out.println(response);
 	}
 
-	public void useResponse() {
+	public void useResponse() throws UnknownHostException, IOException {
 
 	}
 
@@ -75,19 +76,20 @@ public class FTPClient extends Thread {
 	}
 
 	public void writeFile(File file) throws FileNotFoundException {
-		fileOut = new FileOutputStream(file);
+	//	fileOut = new FileOutputStream(file);
 	}
 	
 	public void Login() throws IOException {
-		out.writeBytes("user helmut" + "\r\n");
-	//	Thread.sleep(100);
-		out.writeBytes("pass 123" + "\r\n");
+		out.writeBytes("user clausstaffe" + "\r\n");
+			out.writeBytes("pass 123" + "\r\n");
 
 	}
 
 
 	public void run() {
+		
 		FTPClient ftp;
+		 
 		while(true) {
 			System.out.print("Indtast IP du vil forbinde til: ");
 			String IP = keyb.nextLine();
@@ -136,6 +138,16 @@ public class FTPClient extends Thread {
 				System.out.println("Prøv igen");
 			}
 		}
+			
+		
+	}
+
+	public ServerListener getEar() {
+		return ear;
+	}
+
+	public void setEar(ServerListener ear) {
+		this.ear = ear;
 	}
 
 
