@@ -11,7 +11,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
@@ -105,8 +104,8 @@ public class FTPClient extends Thread {
 
 
 	public void login() throws IOException {
-		out.writeBytes("user clausstaffe" + "\r\n");
-		out.writeBytes("pass 123" + "\r\n");
+		out.writeBytes("user Thomas" + "\r\n");
+		out.writeBytes("pass hejhej" + "\r\n");
 
 	}
 
