@@ -71,8 +71,23 @@ public class FTPClient extends Thread {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			
+
+		}else if(request.toUpperCase().startsWith("LIST")){
+			out.writeBytes("PASV"+"\r\n");
+			try {
+				Thread.sleep(50);
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			getPASV();
+			try {
+				readData(request);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
+
 
 
 	}
@@ -196,15 +211,31 @@ public class FTPClient extends Thread {
 		fileOut= new FileOutputStream(new File(fileDest));
 	}
 	public void readData(String request2) throws IOException, InterruptedException{
-
-		
 		Thread.sleep(50);
+		int fileSize;
+		
+		if(request2.startsWith("LIST")){
+			setupSocket();
+			out.writeBytes("TYPE A\r\n");
+			BufferedReader br = new BufferedReader(new InputStreamReader(dataSocket.getInputStream()));
+			out.writeBytes("LIST\r\n");
+			String text;
+			System.out.println(br.ready());
+			while((text = br.readLine()) != null){
+				System.out.println(text);
+			}
+			br.close();
+			dataSocket.close();
+			Main.setActive(true);
+		}
+
+	
 		//this one moves a file.
 		if(request2.toUpperCase().startsWith("RETR ")){
-			
+
 			setupSocket();
+
 			
-			int fileSize;
 			//set connection to binary data  - sends both text and pictures.
 			out.writeBytes("TYPE I\r\n");
 			System.out.println("PLease write TestKitten.jpeg or store.txt");
@@ -231,8 +262,10 @@ public class FTPClient extends Thread {
 			fileOut.flush();
 			fileOut.close();
 			dataSocket.close();
+			Main.setActive(true);
 
 		}
+		
 
 	}
 

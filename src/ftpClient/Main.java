@@ -26,10 +26,18 @@ public class Main {
 
 
 		while(true){
+			try {
+				Thread.sleep(200);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			while(active){
+				active = false;
+				System.out.println("Please write a command");
 				ftp.makeRequest();
 				ftp.sendRequest();
-				active = false;
+				
 
 			}
 		}
