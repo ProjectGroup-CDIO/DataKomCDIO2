@@ -108,8 +108,8 @@ public class FTPClient extends Thread {
 
 
 	public void login() throws IOException {
-		out.writeBytes("user clausstaffe" + "\r\n");
-		out.writeBytes("pass 123" + "\r\n");
+		out.writeBytes("user Thomas" + "\r\n");
+		out.writeBytes("pass hejhej" + "\r\n");
 
 	}
 
