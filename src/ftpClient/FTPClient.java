@@ -89,7 +89,10 @@ public class FTPClient extends Thread {
 	}
 
 	public void startEar() throws IOException {
+		if(!getEar().isActive()){
 		getEar().start();
+		getEar().setActive(true);
+		}
 	}
 
 
@@ -108,8 +111,15 @@ public class FTPClient extends Thread {
 
 
 	public void login() throws IOException {
-		out.writeBytes("user Thomas" + "\r\n");
-		out.writeBytes("pass hejhej" + "\r\n");
+		Main.setActive(false);
+		System.out.println("Please write your pc login name e.g currently active user");
+		String userName=keyb.nextLine();
+		System.out.println("Please enter the password for the current user: " +userName);
+		String passWd = keyb.nextLine();
+		
+		out.writeBytes("user "+userName  + "\r\n");
+		out.writeBytes("pass "+passWd + "\r\n");
+		Main.setActive(true);
 
 	}
 

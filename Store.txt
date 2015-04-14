@@ -1,6 +1,6 @@
 1,Apple,145
 2,Banana,117
-3,Currant,145
+3,Currant,20
 4,Elderberry,124
 5,Grape,115
 6,Kiwi,128

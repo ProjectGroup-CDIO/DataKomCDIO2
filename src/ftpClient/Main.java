@@ -43,18 +43,23 @@ public class Main {
 					while(true){
 						try {
 							Thread.sleep(200);
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+						
 						while(active){
-							active = false;
-							System.out.println("Please write a command");
 							ftp.login();
 							ftp.startEar();
+							Thread.sleep(200);
+							if(loginAccepted(ftp)){
+							
+							System.out.println("Please write a command");
+							active = false;
 							ftp.makeRequest();
 							ftp.sendRequest();
 							ftp.printMenu();
+							}
+						}
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
 						}
 					}
 				}
@@ -69,6 +74,15 @@ public class Main {
 			keyb.close();
 		}
 		
+	}
+
+	private static boolean loginAccepted(FTPClient ftp) {
+		if(ftp.getEar().line.contains("incorrect")){
+			
+			return false;
+	
+	}
+		return true;
 	}
 
 }
