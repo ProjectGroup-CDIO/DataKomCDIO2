@@ -1,8 +1,4 @@
 package weightClient;
-
-import ftpClient.DataConnectionListener;
-import ftpClient.FTPClient;
-
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;

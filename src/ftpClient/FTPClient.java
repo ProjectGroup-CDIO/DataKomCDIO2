@@ -110,9 +110,6 @@ public class FTPClient extends Thread {
 		System.out.println("Tast 2 for at sende en kommando til ZYBO board");		
 	}
 
-	public void writeFile(File file) throws FileNotFoundException {
-		//	fileOut = new FileOutputStream(file);
-	}
 
 	public void login() throws IOException {
 		out.writeBytes("user clausstaffe" + "\r\n");
@@ -123,57 +120,57 @@ public class FTPClient extends Thread {
 
 	public void run() {
 
-		FTPClient ftp;
-
-		while(true) {
-			System.out.print("Indtast IP du vil forbinde til: ");
-			String IP = keyb.nextLine();
-			System.out.print("\nIndtast port# du vil forbinde til: ");
-			System.out.println();
-			try {
-				int port = Integer.parseInt(keyb.nextLine());
-				ftp = new FTPClient(IP, port);
-				break;
-			} catch (UnknownHostException e) {
-				System.out.println("Error006: "+e.getMessage());
-				e.printStackTrace();
-			} catch (BindException e) {
-				System.out.println("Error009: "+e.getMessage());
-				e.printStackTrace();
-			} catch (IOException e) {
-				System.out.println("Error007: "+e.getMessage());
-				e.printStackTrace();
-			} catch (NumberFormatException e) {
-				System.out.println("Error011: "+e.getMessage());
-			} 
-		}
-
-		while(true) {
-			printMenu();
-			int input = Integer.parseInt(keyb.nextLine());
-			switch(input) {
-			case 1: //transfer file to server
-				while(true) {
-					System.out.print("Indtast sti til fil der skal overføres: ");
-					String file = keyb.nextLine();
-					System.out.println();
-					if(file.equals("q") || file.equals("quit")) {
-						break;
-					} else {
-						try {
-							ftp.writeFile(new File(file));	
-							break;
-						} catch (FileNotFoundException e) {
-							System.out.println("Error010: "+e.getMessage());
-						}
-					}
-				}
-			case 2: 
-			default: 
-				System.out.println("Prøv igen");
-			}
-		}
-
+//		FTPClient ftp;
+//
+//		while(true) {
+//			System.out.print("Indtast IP du vil forbinde til: ");
+//			String IP = keyb.nextLine();
+//			System.out.print("\nIndtast port# du vil forbinde til: ");
+//			System.out.println();
+//			try {
+//				int port = Integer.parseInt(keyb.nextLine());
+//				ftp = new FTPClient(IP, port);
+//				break;
+//			} catch (UnknownHostException e) {
+//				System.out.println("Error006: "+e.getMessage());
+//				e.printStackTrace();
+//			} catch (BindException e) {
+//				System.out.println("Error009: "+e.getMessage());
+//				e.printStackTrace();
+//			} catch (IOException e) {
+//				System.out.println("Error007: "+e.getMessage());
+//				e.printStackTrace();
+//			} catch (NumberFormatException e) {
+//				System.out.println("Error011: "+e.getMessage());
+//			} 
+//		}
+//
+//		while(true) {
+//			printMenu();
+//			int input = Integer.parseInt(keyb.nextLine());
+//			switch(input) {
+//			case 1: //transfer file to server
+//				while(true) {
+//					System.out.print("Indtast sti til fil der skal overføres: ");
+//					String file = keyb.nextLine();
+//					System.out.println();
+//					if(file.equals("q") || file.equals("quit")) {
+//						break;
+//					} else {
+//						try {
+//							ftp.writeFile(new File(file));	
+//							break;
+//						} catch (FileNotFoundException e) {
+//							System.out.println("Error010: "+e.getMessage());
+//						}
+//					}
+//				}
+//			case 2: 
+//			default: 
+//				System.out.println("Prøv igen");
+//			}
+//		}
+//
 
 	}
 
@@ -213,7 +210,7 @@ public class FTPClient extends Thread {
 	public void readData(String request2) throws IOException, InterruptedException{
 		Thread.sleep(50);
 		int fileSize;
-		
+
 		if(request2.startsWith("LIST")){
 			setupSocket();
 			out.writeBytes("TYPE A\r\n");
@@ -229,28 +226,34 @@ public class FTPClient extends Thread {
 			Main.setActive(true);
 		}
 
-	
+
 		//this one moves a file.
 		if(request2.toUpperCase().startsWith("RETR ")){
 
 			setupSocket();
 
-			
+
 			//set connection to binary data  - sends both text and pictures.
 			out.writeBytes("TYPE I\r\n");
-			System.out.println("PLease write TestKitten.jpeg or store.txt");
-			String fileSource = keyb.nextLine();
-			out.writeBytes("SIZE "+fileSource+"\r\n");
+			//System.out.println("PLease write TestKitten.jpeg or store.txt");
+			//String fileSource = keyb.nextLine();
+			out.writeBytes("SIZE "+request2.substring(5,request2.length())+"\r\n");
 			Thread.sleep(10);
-			System.out.println((getEar().getLine().substring(4,getEar().getLine().length())));
+			System.out.println("SIZE? :"+(getEar().getLine().substring(4,getEar().getLine().length())));
 
 			fileSize =(int) 2 *Integer.parseInt(getEar().getLine().substring(4,getEar().getLine().length()));
 			byte[] buf = new byte[fileSize];
 			setupInstreamData();
-			writeFileOutStream();
-			out.writeBytes("RETR "+fileSource+"\r\n");
+			try {
+				writeFileOutStream();
+			} catch (FileNotFoundException e) {
+				System.out.println("File/Directory not found.");
+
+				//e.printStackTrace();
+			}
+			out.writeBytes(request2.trim()+"\r\n");
 			Thread.sleep(50);
-			System.out.println(dataIn.available());
+			System.out.println("DataAvail: " +dataIn.available());
 			int i= 0;
 			while(dataIn.available()> 0){
 				buf[i] =dataIn.readByte();
@@ -258,14 +261,20 @@ public class FTPClient extends Thread {
 			}
 			//		Path path = Paths.get(fileSource);
 			//		buf = Files.readAllBytes(path);
-			fileOut.write(buf);
-			fileOut.flush();
-			fileOut.close();
-			dataSocket.close();
+			try {
+				fileOut.write(buf);
+				fileOut.flush();
+
+				fileOut.close();
+				dataSocket.close();
+			} catch (Exception e) {
+				System.out.println("Error: null");
+			}
 			Main.setActive(true);
 
+
 		}
-		
+
 
 	}
 
