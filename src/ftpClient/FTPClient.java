@@ -11,18 +11,11 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.BindException;
+
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 
-import weightClient.WeightClient;
-
-
-/**
- * @author Thomas
- *
- */
 
 public class FTPClient extends Thread {
 
