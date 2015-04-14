@@ -3,7 +3,16 @@ package ftpClient;
 public class ServerListener extends Thread {
 	public	String line = "";
 	public String finalLine = "";
+	private boolean isActive = false;
 	
+	public boolean isActive() {
+		return isActive;
+	}
+
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
+	}
+
 	public void run(){
 		try {
 			//	System.out.println(!(line = in.readLine()).equals(""));

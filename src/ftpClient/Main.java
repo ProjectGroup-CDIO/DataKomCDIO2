@@ -29,33 +29,45 @@ public class Main {
 		while(active){
 			active = false; 
 			Scanner keyb = new Scanner(System.in);
+			ftp.login();
+			ftp.startEar();
+			String input = " ";
 			System.out.println("Press 1 for FTP Client");
 			System.out.println("Press 2 for Weight Client");
-			String input = " ";
 			try {
 				input = keyb.nextLine();
 			} catch (NoSuchElementException e1) {
 				System.out.println("Error: "+e1.getMessage());
 				//e1.printStackTrace();
 			}
-	
-			if(!(input.isEmpty())) {
-				if(input.equals("1")) {
+			
+			
+			if(!(input.isEmpty())){	
+				if(input.equals("1")){
 					while(true){
 						try {
 							Thread.sleep(200);
+					
+						active = true;
+
+						while(active){
+							active = false;
+							ftp.printMenu();
+							Thread.sleep(200);
+							if(loginAccepted(ftp)){
+//							System.out.println("Please write a command");
+							active = false;
+
+							ftp.makeRequest();
+							ftp.sendRequest();
+
+							ftp.printMenu();
+							}
+						}
 						} catch (InterruptedException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
-						}
-						active = true;
-						while(active){
-							active = false;
-							ftp.login();
-							ftp.startEar();
-							ftp.printMenu();
-							ftp.makeRequest();
-							ftp.sendRequest();
+
 						}
 					}
 				}
@@ -72,6 +84,15 @@ public class Main {
 			keyb.close();
 		}
 		
+}
+
+	private static boolean loginAccepted(FTPClient ftp) {
+		if(ftp.getEar().line.contains("incorrect")){
+			
+			return false;
+	
+	}
+		return true;
 	}
 
 }

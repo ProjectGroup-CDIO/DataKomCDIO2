@@ -89,7 +89,10 @@ public class FTPClient extends Thread {
 	}
 
 	public void startEar() throws IOException {
+		if(!getEar().isActive()){
 		getEar().start();
+		getEar().setActive(true);
+		}
 	}
 
 
@@ -108,8 +111,72 @@ public class FTPClient extends Thread {
 
 
 	public void login() throws IOException {
-		out.writeBytes("user Thomas" + "\r\n");
-		out.writeBytes("pass hejhej" + "\r\n");
+		Main.setActive(false);
+		System.out.println("Please write your pc login name e.g currently active user");
+		String userName=keyb.nextLine();
+		System.out.println("Please enter the password for the current user: " +userName);
+		String passWd = keyb.nextLine();
+		
+		out.writeBytes("user "+userName  + "\r\n");
+		out.writeBytes("pass "+passWd + "\r\n");
+		Main.setActive(true);
+
+	}
+
+
+	public void run() {
+
+//		FTPClient ftp;
+//
+//		while(true) {
+//			System.out.print("Indtast IP du vil forbinde til: ");
+//			String IP = keyb.nextLine();
+//			System.out.print("\nIndtast port# du vil forbinde til: ");
+//			System.out.println();
+//			try {
+//				int port = Integer.parseInt(keyb.nextLine());
+//				ftp = new FTPClient(IP, port);
+//				break;
+//			} catch (UnknownHostException e) {
+//				System.out.println("Error006: "+e.getMessage());
+//				e.printStackTrace();
+//			} catch (BindException e) {
+//				System.out.println("Error009: "+e.getMessage());
+//				e.printStackTrace();
+//			} catch (IOException e) {
+//				System.out.println("Error007: "+e.getMessage());
+//				e.printStackTrace();
+//			} catch (NumberFormatException e) {
+//				System.out.println("Error011: "+e.getMessage());
+//			} 
+//		}
+//
+//		while(true) {
+//			printMenu();
+//			int input = Integer.parseInt(keyb.nextLine());
+//			switch(input) {
+//			case 1: //transfer file to server
+//				while(true) {
+//					System.out.print("Indtast sti til fil der skal overføres: ");
+//					String file = keyb.nextLine();
+//					System.out.println();
+//					if(file.equals("q") || file.equals("quit")) {
+//						break;
+//					} else {
+//						try {
+//							ftp.writeFile(new File(file));	
+//							break;
+//						} catch (FileNotFoundException e) {
+//							System.out.println("Error010: "+e.getMessage());
+//						}
+//					}
+//				}
+//			case 2: 
+//			default: 
+//				System.out.println("Prøv igen");
+//			}
+//		}
+//
 
 	}
 
