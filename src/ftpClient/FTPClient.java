@@ -23,6 +23,8 @@ import java.util.Scanner;
 public class FTPClient extends Thread {
 
 	private Socket socket;
+	
+
 	public static BufferedReader in; 
 	public DataOutputStream out;
 	private Scanner keyb = new Scanner(System.in);
@@ -126,57 +128,7 @@ public class FTPClient extends Thread {
 
 	public void run() {
 
-//		FTPClient ftp;
-//
-//		while(true) {
-//			System.out.print("Indtast IP du vil forbinde til: ");
-//			String IP = keyb.nextLine();
-//			System.out.print("\nIndtast port# du vil forbinde til: ");
-//			System.out.println();
-//			try {
-//				int port = Integer.parseInt(keyb.nextLine());
-//				ftp = new FTPClient(IP, port);
-//				break;
-//			} catch (UnknownHostException e) {
-//				System.out.println("Error006: "+e.getMessage());
-//				e.printStackTrace();
-//			} catch (BindException e) {
-//				System.out.println("Error009: "+e.getMessage());
-//				e.printStackTrace();
-//			} catch (IOException e) {
-//				System.out.println("Error007: "+e.getMessage());
-//				e.printStackTrace();
-//			} catch (NumberFormatException e) {
-//				System.out.println("Error011: "+e.getMessage());
-//			} 
-//		}
-//
-//		while(true) {
-//			printMenu();
-//			int input = Integer.parseInt(keyb.nextLine());
-//			switch(input) {
-//			case 1: //transfer file to server
-//				while(true) {
-//					System.out.print("Indtast sti til fil der skal overføres: ");
-//					String file = keyb.nextLine();
-//					System.out.println();
-//					if(file.equals("q") || file.equals("quit")) {
-//						break;
-//					} else {
-//						try {
-//							ftp.writeFile(new File(file));	
-//							break;
-//						} catch (FileNotFoundException e) {
-//							System.out.println("Error010: "+e.getMessage());
-//						}
-//					}
-//				}
-//			case 2: 
-//			default: 
-//				System.out.println("Prøv igen");
-//			}
-//		}
-//
+
 
 	}
 
@@ -194,25 +146,28 @@ public class FTPClient extends Thread {
 			PASV = getEar().getLine().substring(getEar().getLine().indexOf('(')+1, getEar().getLine().indexOf(')'));
 			String[] box = PASV.split(",");
 			portNumber = Integer.parseInt(box[4])*256 +Integer.parseInt(box[5]);
-			System.out.println(portNumber);
+			System.out.println("Port that stuff is sent over: "+portNumber);
 		}
 	}
 
 	public void setupSocket() throws UnknownHostException, IOException{
-		dataSocket = new Socket("127.0.0.1", portNumber);
+		dataSocket = new Socket(socket.getInetAddress(), portNumber);
 
 	}
+	
 	public void setupInstreamData() throws IOException{
 		dataIn =  new DataInputStream(dataSocket.getInputStream());
 		//InputStream inputstream = new FileInputStream("c:\\data\\input-text.txt");
 
 
 	}
-	public void writeFileOutStream() throws FileNotFoundException{
-		System.out.println("write a system path for file placement: fx /Users/clausstaffe");
+	
+public void writeFileOutStream() throws FileNotFoundException{
+		System.out.println("write a system path for file placement: fx /Users/username/file.filetype");
 		String fileDest = keyb.nextLine();
 		fileOut= new FileOutputStream(new File(fileDest));
 	}
+	
 	public void readData(String request2) throws IOException, InterruptedException{
 		Thread.sleep(50);
 		int fileSize;
@@ -223,7 +178,8 @@ public class FTPClient extends Thread {
 			BufferedReader br = new BufferedReader(new InputStreamReader(dataSocket.getInputStream()));
 			out.writeBytes("LIST\r\n");
 			String text;
-			System.out.println(br.ready());
+			//checks if the buffered reader is ready for input
+			//	System.out.println(br.ready());
 			while((text = br.readLine()) != null){
 				System.out.println(text);
 			}
@@ -241,12 +197,9 @@ public class FTPClient extends Thread {
 			String sti = keyb.nextLine();
 			System.out.println();
 			//set connection to binary data  - sends both text and pictures.
-			//System.out.println("PLease write TestKitten.jpeg or store.txt");
-			//String fileSource = keyb.nextLine();
 			out.writeBytes("SIZE "+sti.trim()+"\r\n");
 			Thread.sleep(100);
-			System.out.println("SIZE? :"+(getEar().getLine().substring(4,getEar().getLine().length())));
-			System.out.println(getEar().getLine());
+			System.out.println("Byte size of file transfered :"+(getEar().getLine().substring(4,getEar().getLine().length())));
 			fileSize =(int) 2 *Integer.parseInt(getEar().getLine().substring(4,getEar().getLine().length()).trim());
 			byte[] buf = new byte[fileSize];
 			setupInstreamData();
@@ -283,11 +236,6 @@ public class FTPClient extends Thread {
 
 
 	}
-
-
-
-
-
 
 	public void productMani() {
 			try {
@@ -333,32 +281,14 @@ public class FTPClient extends Thread {
 			}
 	}
 
-	//	try {
-	//		
-	//
-	//		storeText = new BufferedReader(new FileReader("Store.txt"));
-	//
-	//
-	//		String line = storeText.readLine();
-	//		
-	//		int nrOfProducts = 0;
-	//		while (line != null) {
-	//			outstream.writeBytes(line +"\n\r");
-	//			line = storeText.readLine();
-	//			nrOfProducts++;
-	//		}
-	//		outstream.writeBytes("Please write a produkt ID - its a nr.");
-	//		inline = instream.readLine().toUpperCase();
-	//		if((inline.matches("[0-9]+"))){
-	//			productVerification(inline, nrOfProducts);
-	//		}else{
-	//			System.out.println("Wrong input!");
-	//		}
-	//
-	//	} catch (Exception e2) {
-	//		// TODO Auto-generated catch block
-	//		e2.printStackTrace();
-	//	}
+	public Socket getSocket() {
+		
+		return this.socket;
+	}
+
+	public void setSocket(Socket socket) {
+		this.socket = socket;
+	}
 
 
 }
