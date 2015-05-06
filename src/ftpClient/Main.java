@@ -10,7 +10,7 @@ import java.util.Scanner;
 public class Main {
 
 	private static boolean active = true;
-
+	private static Scanner keyb = new Scanner(System.in);
 	public static boolean isActive() {
 		return active;
 	}
@@ -21,9 +21,9 @@ public class Main {
 
 	public static void main(String[] args) throws UnknownHostException, IOException {
 		FTPClient ftp = null;
-		Scanner keyb = new Scanner(System.in);
+
 		boolean connected = false;
-		
+
 		while(!connected){
 			System.out.println("IP address of the FTP server");
 			String IPaddr = keyb.nextLine();
@@ -35,63 +35,67 @@ public class Main {
 			}
 
 		}
+		ftp.login();
+		ftp.startEar();
 		while(active){
-			active = false; 
-			ftp.login();
-			ftp.startEar();
 			String input = " ";
 			System.out.println("Press 1 for FTP Client");
 			System.out.println("Press 2 for Weight Client");
+			System.out.println("Press Q to quit");
 			try {
 				input = keyb.nextLine();
 			} catch (NoSuchElementException e1) {
 				System.out.println("Error: "+e1.getMessage());
-				//e1.printStackTrace();
 			}
-
-
 			if(!(input.isEmpty())){	
 				if(input.equals("1")){
-					while(true){
-						try {
-							Thread.sleep(200);
-
-							active = true;
-
-							while(active){
-								active = false;
-								ftp.printMenu();
-								Thread.sleep(200);
-								if(loginAccepted(ftp)){
-									//							System.out.println("Please write a command");
-									active = false;
-
-									ftp.makeRequest();
-									ftp.sendRequest();
-
-									ftp.printMenu();
-								}
-							}
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-
-						}
-					}
+					ftpCommands(ftp);
 				}
-				if(input.equals("2")) {
+				else if(input.equals("2")) {
 					ftp.productMani();
 					active = true;
 					continue;
+				}
+				else if(input.equals("Q")){
+					System.out.println("Ending program");
+					ftp.getSocket().close();
+					active = false;
+					break;
+					
 				}else{
 					active = true;
 					continue;
 				}
-
 			}
-			keyb.close();
 		}
+		keyb.close();
+	}
 
+	private static void ftpCommands(FTPClient ftp) throws IOException {
+		try {
+			Thread.sleep(200);
+			while(true){
+				if(loginAccepted(ftp)){
+					ftp.printMenu();
+					System.out.println("Choose 1, 2, or B to exit");
+					String input = keyb.nextLine();
+
+					if(input.equals("1") || input.equals("2")){
+						ftp.makeRequest(input);
+						ftp.sendRequest();
+					}else if(input.equals("B")){
+						System.out.println("breaks ftpCommands loop");
+						break;
+					}else{
+						System.out.println("Command not recognized try again!");
+					}
+				}
+			}
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+
+		}
 	}
 
 	private static boolean loginAccepted(FTPClient ftp) {

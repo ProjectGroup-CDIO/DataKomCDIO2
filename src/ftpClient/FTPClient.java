@@ -23,7 +23,7 @@ import java.util.Scanner;
 public class FTPClient extends Thread {
 
 	private Socket socket;
-	
+
 
 	public static BufferedReader in; 
 	public DataOutputStream out;
@@ -48,8 +48,13 @@ public class FTPClient extends Thread {
 		out = new DataOutputStream(socket.getOutputStream()); 
 	}
 
-	public synchronized void makeRequest() {
-		String input = keyb.nextLine();
+
+
+	public void run() {
+
+	}
+
+	public synchronized void makeRequest(String input) {
 		request = input;
 	}
 
@@ -60,7 +65,6 @@ public class FTPClient extends Thread {
 			try {
 				Thread.sleep(50);
 			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			getPASV();
@@ -75,7 +79,6 @@ public class FTPClient extends Thread {
 			try {
 				Thread.sleep(50);
 			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			getPASV();
@@ -84,6 +87,9 @@ public class FTPClient extends Thread {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+		}else if(request.toUpperCase().startsWith("B")){
+			System.out.println("Going Back");
+			
 		}
 
 
@@ -92,8 +98,8 @@ public class FTPClient extends Thread {
 
 	public void startEar() throws IOException {
 		if(!getEar().isActive()){
-		getEar().start();
-		getEar().setActive(true);
+			getEar().start();
+			getEar().setActive(true);
 		}
 	}
 
@@ -108,7 +114,9 @@ public class FTPClient extends Thread {
 
 	public void printMenu() {
 		System.out.println("Tast 1 for at hente en fil");
-		System.out.println("Tast 2 for at se en liste over filer og mapper");		
+		System.out.println("Tast 2 for at se en liste over filer og mapper");	
+		System.out.println("Tast B for at gå tilbage");	
+		
 	}
 
 
@@ -118,19 +126,13 @@ public class FTPClient extends Thread {
 		String userName=keyb.nextLine();
 		System.out.println("Please enter the password for the current user: " +userName);
 		String passWd = keyb.nextLine();
-		
+
 		out.writeBytes("user "+userName  + "\r\n");
 		out.writeBytes("pass "+passWd + "\r\n");
 		Main.setActive(true);
 
 	}
 
-
-	public void run() {
-
-
-
-	}
 
 	public ServerListener getEar() {
 		return ear;
@@ -154,21 +156,20 @@ public class FTPClient extends Thread {
 		dataSocket = new Socket(socket.getInetAddress(), portNumber);
 
 	}
-	
+
 	public void setupInstreamData() throws IOException{
 		dataIn =  new DataInputStream(dataSocket.getInputStream());
-		//InputStream inputstream = new FileInputStream("c:\\data\\input-text.txt");
 
 
 	}
-	
-public void writeFileOutStream() throws FileNotFoundException{
+
+	public void writeFileOutStream() throws FileNotFoundException{
 		System.out.println("write a system path for file placement: fx /Users/username/file.filetype");
 		String fileDest = keyb.nextLine();
 		fileOut= new FileOutputStream(new File(fileDest));
 	}
-	
-	public void readData(String request2) throws IOException, InterruptedException{
+
+	public void readData(String request2) throws NumberFormatException, IOException, InterruptedException{
 		Thread.sleep(50);
 		int fileSize;
 
@@ -238,51 +239,51 @@ public void writeFileOutStream() throws FileNotFoundException{
 	}
 
 	public void productMani() {
-			try {
-				BufferedReader storeText = new BufferedReader(new FileReader("Store.txt"));
-				String line;String input = "";
-				while ((line = storeText.readLine()) != null) input += line + '\n';
-			
-			    storeText.close();
-			    System.out.println(input);			        
-			    String vare[] = input.split("\n");
-			    int nrOfProducts = vare.length;
-			    System.out.println("Vaelg et vare nr");
-			    String inline = keyb.nextLine();
-			    
-			    System.out.println("Du har valgt: "+vare[Integer.parseInt(inline)-1]);
-			    String valgt[] = vare[Integer.parseInt(inline)-1].split(",");
-			    System.out.println("Vælg ny vaegt for "+valgt[1]);
-			    String nyVaegt = keyb.nextLine();
-			    String gamleVaegt =valgt[2];
-			    valgt[2]=nyVaegt;
-			    vare[Integer.parseInt(inline)-1]=valgt[0]+","+valgt[1]+","+valgt[2];
-			    
-			    //System.out.println(vare[Integer.parseInt(inline)]);
-			    FileWriter output = new FileWriter("Store.txt");
-			    try(PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("Store.txt", true)))) {
-			    	for(int i = 0; nrOfProducts > i; i++){
-			    		if(i!=nrOfProducts-1){
-			    			out.println(vare[i]);
-			    		}else{
-			    			out.print(vare[i]);
-			    		}
-			    	}UserCommandLog.UpdateLog(valgt[1], gamleVaegt, valgt[2]);
-			    	
-			    }catch (Exception e) {
-			    					// TODO Auto-generated catch block
-			    					e.printStackTrace();
-			    }
-			    output.close();
-			    
-			} catch (Exception e) {
+		try {
+			BufferedReader storeText = new BufferedReader(new FileReader("Store.txt"));
+			String line;String input = "";
+			while ((line = storeText.readLine()) != null) input += line + '\n';
+
+			storeText.close();
+			System.out.println(input);			        
+			String vare[] = input.split("\n");
+			int nrOfProducts = vare.length;
+			System.out.println("Vaelg et vare nr");
+			String inline = keyb.nextLine();
+
+			System.out.println("Du har valgt: "+vare[Integer.parseInt(inline)-1]);
+			String valgt[] = vare[Integer.parseInt(inline)-1].split(",");
+			System.out.println("Vælg ny vaegt for "+valgt[1]);
+			String nyVaegt = keyb.nextLine();
+			String gamleVaegt =valgt[2];
+			valgt[2]=nyVaegt;
+			vare[Integer.parseInt(inline)-1]=valgt[0]+","+valgt[1]+","+valgt[2];
+
+			//System.out.println(vare[Integer.parseInt(inline)]);
+			FileWriter output = new FileWriter("Store.txt");
+			try(PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("Store.txt", true)))) {
+				for(int i = 0; nrOfProducts > i; i++){
+					if(i!=nrOfProducts-1){
+						out.println(vare[i]);
+					}else{
+						out.print(vare[i]);
+					}
+				}UserCommandLog.UpdateLog(valgt[1], gamleVaegt, valgt[2]);
+
+			}catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			output.close();
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public Socket getSocket() {
-		
+
 		return this.socket;
 	}
 

@@ -1,2 +1,1 @@
-Operatøren har ændret vaegten for Pear fra 110 til 115, 14/04/2015 20:41:14
-Operatøren har ændret vaegten for Grape fra 115 til 116, 14/04/2015 20:43:09
+Operatøren har ændret vaegten for Banana fra 20 til 200, 06/05/2015 13:02:10
