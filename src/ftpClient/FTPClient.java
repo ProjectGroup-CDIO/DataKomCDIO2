@@ -15,6 +15,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.ConnectException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
@@ -78,18 +79,25 @@ public class FTPClient extends Thread {
 			out.writeBytes("PASV"+"\r\n");
 			try {
 				Thread.sleep(50);
-			} catch (InterruptedException e1) {
-				e1.printStackTrace();
-			}
-			getPASV();
-			try {
+
+				getPASV();
+
 				readData(request);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-		}else if(request.toUpperCase().startsWith("B")){
-			System.out.println("Going Back");
-			
+
+		}else if(request.toUpperCase().equals("3")){
+			out.writeBytes("PASV"+"\r\n");
+			try {
+				Thread.sleep(50);
+
+				getPASV();
+
+				readData(request);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 
 
@@ -103,7 +111,6 @@ public class FTPClient extends Thread {
 		}
 	}
 
-
 	public void printResponse() {
 		System.out.println(response);
 	}
@@ -115,10 +122,10 @@ public class FTPClient extends Thread {
 	public void printMenu() {
 		System.out.println("Tast 1 for at hente en fil");
 		System.out.println("Tast 2 for at se en liste over filer og mapper");	
+		System.out.println("Tast 3 for at få max sensor data");
 		System.out.println("Tast B for at gå tilbage");	
-		
-	}
 
+	}
 
 	public void login() throws IOException {
 		Main.setActive(false);
@@ -132,7 +139,6 @@ public class FTPClient extends Thread {
 		Main.setActive(true);
 
 	}
-
 
 	public ServerListener getEar() {
 		return ear;
@@ -153,8 +159,11 @@ public class FTPClient extends Thread {
 	}
 
 	public void setupSocket() throws UnknownHostException, IOException{
-		dataSocket = new Socket(socket.getInetAddress(), portNumber);
-
+		try{
+			dataSocket = new Socket(socket.getInetAddress(), portNumber);
+		}catch(ConnectException e){
+			System.out.println(e.getMessage());
+		}
 	}
 
 	public void setupInstreamData() throws IOException{
@@ -172,8 +181,10 @@ public class FTPClient extends Thread {
 	public void readData(String request2) throws NumberFormatException, IOException, InterruptedException{
 		Thread.sleep(50);
 		int fileSize;
-
-		if(request2.startsWith("2")){
+		if(request2.startsWith("3")){
+			getMaxSensor4();
+		}
+		else if(request2.startsWith("2")){
 			setupSocket();
 			out.writeBytes("TYPE A\r\n");
 			BufferedReader br = new BufferedReader(new InputStreamReader(dataSocket.getInputStream()));
@@ -188,10 +199,8 @@ public class FTPClient extends Thread {
 			dataSocket.close();
 			Main.setActive(true);
 		}
-
-
 		//this one moves a file.
-		if(request2.toUpperCase().equals("1")){
+		else if(request2.toUpperCase().equals("1")){
 			setupSocket();
 			out.writeBytes("TYPE I\r\n");
 			System.out.print("Indtast sti til ønskede fil: ");
@@ -238,58 +247,134 @@ public class FTPClient extends Thread {
 
 	}
 
-	public void productMani() {
+	private void getMaxSensor4() {
+
 		try {
-			BufferedReader storeText = new BufferedReader(new FileReader("Store.txt"));
-			String line;String input = "";
-			while ((line = storeText.readLine()) != null) input += line + '\n';
-
-			storeText.close();
-			System.out.println(input);			        
-			String vare[] = input.split("\n");
-			int nrOfProducts = vare.length;
-			System.out.println("Vaelg et vare nr");
-			String inline = keyb.nextLine();
-
-			System.out.println("Du har valgt: "+vare[Integer.parseInt(inline)-1]);
-			String valgt[] = vare[Integer.parseInt(inline)-1].split(",");
-			System.out.println("Vælg ny vaegt for "+valgt[1]);
-			String nyVaegt = keyb.nextLine();
-			String gamleVaegt =valgt[2];
-			valgt[2]=nyVaegt;
-			vare[Integer.parseInt(inline)-1]=valgt[0]+","+valgt[1]+","+valgt[2];
-
-			//System.out.println(vare[Integer.parseInt(inline)]);
-			FileWriter output = new FileWriter("Store.txt");
-			try(PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("Store.txt", true)))) {
-				for(int i = 0; nrOfProducts > i; i++){
-					if(i!=nrOfProducts-1){
-						out.println(vare[i]);
-					}else{
-						out.print(vare[i]);
-					}
-				}UserCommandLog.UpdateLog(valgt[1], gamleVaegt, valgt[2]);
-
-			}catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			int fileSize;
+			setupSocket();
+			out.writeBytes("TYPE I\r\n");
+			String sti = "max_number.txt";
+			//set connection to binary data  - sends both text and pictures.
+			out.writeBytes("SIZE "+sti.trim()+"\r\n");
+			Thread.sleep(100);
+			//Filesize is set from the reply from the SIZE command
+			fileSize =(int) 2 *Integer.parseInt(getEar().getLine().substring(4,getEar().getLine().length()).trim());
+			byte[] buf = new byte[fileSize];
+			setupInstreamData();
+			try {
+				fileOut= new FileOutputStream(new File("sensorData.txt"));
+			} catch (FileNotFoundException e) {
+				System.out.println("File/Directory not found.");
 			}
-			output.close();
+			out.writeBytes("RETR "+sti.trim()+"\r\n");
+			Thread.sleep(50);
+			int i= 0;
+			while(dataIn.available()> 0){
+				buf[i] =dataIn.readByte();
+				i++;
+			}
+			//		Path path = Paths.get(fileSource);
+			//		buf = Files.readAllBytes(path);
+			fileOut.write(buf);
+			fileOut.flush();
 
+			fileOut.close();
+			dataSocket.close();
 		} catch (Exception e) {
+			System.out.println("Error: null");
+		}
+		
+		printCSVData();
+		
+		
+	}
+
+
+
+
+private void printCSVData() {
+	
+	String filename = "sensorData.txt";
+	
+	String line = null;
+	
+	try {
+		FileReader fileReader = new FileReader(filename);
+		
+		BufferedReader bufferedReader = new BufferedReader (fileReader);
+		
+		while((line = bufferedReader.readLine())!= null){
+			String[] maxVal = line.split("\\s+");
+			
+			for(int i = 0; i< 6; i++){
+				
+			System.out.println("Sensor "+i+ " MaxValue: "+maxVal[i]);
+			}
+			
+	
+		}
+		bufferedReader.close();
+		}
+		catch(FileNotFoundException ex){
+		System.out.println("Unable to open file" + filename + "");
+		}
+		catch(IOException ex){
+		System.out.println("Error reading file "+ filename + "");
+	}
+		
+		
+	}
+public void productMani() {
+	try {
+		BufferedReader storeText = new BufferedReader(new FileReader("Store.txt"));
+		String line;String input = "";
+		while ((line = storeText.readLine()) != null) input += line + '\n';
+
+		storeText.close();
+		System.out.println(input);			        
+		String vare[] = input.split("\n");
+		int nrOfProducts = vare.length;
+		System.out.println("Vaelg et vare nr");
+		String inline = keyb.nextLine();
+
+		System.out.println("Du har valgt: "+vare[Integer.parseInt(inline)-1]);
+		String valgt[] = vare[Integer.parseInt(inline)-1].split(",");
+		System.out.println("Vælg ny vaegt for "+valgt[1]);
+		String nyVaegt = keyb.nextLine();
+		String gamleVaegt =valgt[2];
+		valgt[2]=nyVaegt;
+		vare[Integer.parseInt(inline)-1]=valgt[0]+","+valgt[1]+","+valgt[2];
+
+		//System.out.println(vare[Integer.parseInt(inline)]);
+		FileWriter output = new FileWriter("Store.txt");
+		try(PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("Store.txt", true)))) {
+			for(int i = 0; nrOfProducts > i; i++){
+				if(i!=nrOfProducts-1){
+					out.println(vare[i]);
+				}else{
+					out.print(vare[i]);
+				}
+			}UserCommandLog.UpdateLog(valgt[1], gamleVaegt, valgt[2]);
+
+		}catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
+		output.close();
 
-	public Socket getSocket() {
-
-		return this.socket;
+	} catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
 	}
+}
+public Socket getSocket() {
 
-	public void setSocket(Socket socket) {
-		this.socket = socket;
-	}
+	return this.socket;
+}
+
+public void setSocket(Socket socket) {
+	this.socket = socket;
+}
 
 
 }

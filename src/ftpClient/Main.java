@@ -41,6 +41,7 @@ public class Main {
 			String input = " ";
 			System.out.println("Press 1 for FTP Client");
 			System.out.println("Press 2 for Weight Client");
+			System.out.println("Press 3 for csv operations");
 			System.out.println("Press Q to quit");
 			try {
 				input = keyb.nextLine();
@@ -53,8 +54,9 @@ public class Main {
 				}
 				else if(input.equals("2")) {
 					ftp.productMani();
-					active = true;
-					continue;
+				}else if(input.equals("3")){
+					ftpCommands(ftp);
+					
 				}
 				else if(input.equals("Q")){
 					System.out.println("Ending program");
@@ -77,10 +79,10 @@ public class Main {
 			while(true){
 				if(loginAccepted(ftp)){
 					ftp.printMenu();
-					System.out.println("Choose 1, 2, or B to exit");
+					System.out.println("Choose 1, 2, 3 or B to exit");
 					String input = keyb.nextLine();
 
-					if(input.equals("1") || input.equals("2")){
+					if(input.equals("1") || input.equals("2") || input.equals("3")){
 						ftp.makeRequest(input);
 						ftp.sendRequest();
 					}else if(input.equals("B")){
