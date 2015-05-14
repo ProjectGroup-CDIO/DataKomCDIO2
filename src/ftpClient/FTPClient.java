@@ -154,7 +154,7 @@ public class FTPClient extends Thread {
 			PASV = getEar().getLine().substring(getEar().getLine().indexOf('(')+1, getEar().getLine().indexOf(')'));
 			String[] box = PASV.split(",");
 			portNumber = Integer.parseInt(box[4])*256 +Integer.parseInt(box[5]);
-			System.out.println("Port that stuff is sent over: "+portNumber);
+		//	System.out.println("Port that stuff is sent over: "+portNumber);
 		}
 	}
 
@@ -305,11 +305,12 @@ private void printCSVData() {
 		
 		while((line = bufferedReader.readLine())!= null){
 			String[] maxVal = line.split("\\s+");
-			
+			if(maxVal.length > 5){
 			for(int i = 0; i< 6; i++){
 				
-			System.out.println("Sensor "+i+ " MaxValue: "+maxVal[i]);
-			}
+			System.out.println("Sensor "+(i+1)+ " MaxValue: "+maxVal[i]);
+			
+			}}
 			
 	
 		}
