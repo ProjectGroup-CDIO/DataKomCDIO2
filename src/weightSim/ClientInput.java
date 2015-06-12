@@ -202,7 +202,7 @@ public class ClientInput extends Thread {
 						System.exit(0);
 					}
 					if(!correctmsg){
-						outstream.writeBytes("S"+"\r\n");
+						outstream.writeBytes("ES"+"\r\n");
 					}
 				}
 			}catch(NullPointerException e1){

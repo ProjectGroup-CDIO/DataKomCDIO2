@@ -40,7 +40,7 @@ public class Simulator {
 			} catch (NumberFormatException e) {
 				System.out.println("Error: "+e.getMessage());
 			}
-			//In case of NumberFormatException inputInt will be 0, and if-statement wont be entered
+			//In case of NumberFormatException inputInt will be 0, and if-statement wont be executed
 			if(inputInt >= 1 && inputInt <= 65536) {
 				portdst = inputInt;
 				try {
